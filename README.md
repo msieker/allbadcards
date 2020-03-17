@@ -1,1 +1,1 @@
-# humanity.cards
+# Humanity.Cards
