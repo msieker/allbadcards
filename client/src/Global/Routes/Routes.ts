@@ -24,5 +24,5 @@ export class SiteRoute<T extends object = {}>
 export class SiteRoutes
 {
 	public static Games = new SiteRoute("/games");
-	public static Game = new SiteRoute<{id: string}>("/game/:id");
+	public static Game = new SiteRoute<{id: string}>("/game/:stage/:id");
 }

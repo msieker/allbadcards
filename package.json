@@ -8,10 +8,11 @@
     "client": "cd client && yarn start",
     "server": "node -r ts-node/register --inspect=5001 --nolazy server/server.ts --runInBand",
     "server-watch": "nodemon",
+    "clean": "if exist output rmdir /s /q output",
     "dev": "concurrently --kill-others \"yarn server-watch\" \"yarn client\"",
     "build-client": "cd client && yarn build",
     "build-server": "node server/scripts/build.js -serverenv=prod",
-    "build": "yarn clean && yarn build-client && yarn build-server-prod",
+    "build": "yarn clean && yarn build-client && yarn build-server",
     "finalize": "node server/scripts/finalize.js"
   },
   "author": "",
@@ -41,9 +42,11 @@
     "@types/express": "4.17.1",
     "@types/mongodb": "^3.3.3",
     "@types/serve-static": "^1.13.3",
+    "@types/shortid": "^0.0.29",
     "@types/simple-oauth2": "^2.2.1",
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/swagger-ui-react": "^3.23.0",
+    "@types/ws": "^7.2.3",
     "@typescript-eslint/eslint-plugin": "2.6.1",
     "@typescript-eslint/parser": "2.6.1",
     "body-parser": "^1.19.0",
@@ -56,8 +59,10 @@
     "nodemon": "^2.0.2",
     "patreon": "^0.4.1",
     "serve-static": "^1.14.1",
+    "shortid": "^2.2.15",
     "ts-loader": "^6.1.0",
     "webpack": "4.39.1",
-    "webpack-cli": "^3.3.8"
+    "webpack-cli": "^3.3.8",
+    "ws": "^7.2.3"
   }
 }

@@ -10,7 +10,7 @@ import Divider from "@material-ui/core/Divider";
 import {makeStyles} from "@material-ui/core/styles";
 import GamePreview from "./GamePreview";
 
-interface IGameStartProps
+interface IGameJoinProps
 {
 	id: string;
 }
@@ -24,17 +24,17 @@ const useStyles = makeStyles({
 	}
 });
 
-const GameStart: React.FC<IGameStartProps> = (props) =>
+const GameJoin: React.FC<IGameJoinProps> = (props) =>
 {
 	const classes = useStyles();
 
 	return (
 		<GamePreview id={props.id}>
 			<Button variant={"contained"} color={"primary"}>
-				Start
+				Join
 			</Button>
 		</GamePreview>
 	);
 };
 
-export default GameStart;
+export default GameJoin;

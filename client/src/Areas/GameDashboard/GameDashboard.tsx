@@ -2,9 +2,10 @@ import * as React from "react";
 import {List} from "@material-ui/core";
 import {GiCardDraw, GiCardPlay} from "react-icons/all";
 import Button from "@material-ui/core/Button";
-import shortid from "shortid";
 import {RouteComponentProps, withRouter} from "react-router";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import {Platform} from "../../Global/Platform/platform";
+import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
 
 interface IGameDashboardProps extends RouteComponentProps
 {
@@ -19,6 +20,7 @@ type State = ICreationState;
 
 interface ICreationState
 {
+	userData: IUserData;
 }
 
 class GameDashboard extends React.Component<Props, State>
@@ -27,12 +29,22 @@ class GameDashboard extends React.Component<Props, State>
 	{
 		super(props);
 
-		this.state = {};
+		this.state = {
+			userData: UserDataStore.state
+		};
 	}
 
-	private createGame = () =>
+	public componentDidMount(): void
 	{
-		this.props.history.push(`/game/${shortid.generate()}`)
+		UserDataStore.listen(data => this.setState({
+			userData: data
+		}));
+	}
+
+	private createGame = async () =>
+	{
+		const game = await Platform.createGame(this.state.userData.playerGuid);
+		this.props.history.push(`/game/start/${game.id}`)
 	};
 
 	public render()
@@ -52,15 +64,6 @@ class GameDashboard extends React.Component<Props, State>
 						startIcon={<GiCardDraw/>}
 					>
 						New Game
-					</Button>
-					<Button
-						variant="contained"
-						color="primary"
-						size="large"
-						onClick={this.createGame}
-						startIcon={<GiCardPlay/>}
-					>
-						Join Game
 					</Button>
 				</ButtonGroup>
 			</>

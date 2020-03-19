@@ -4,11 +4,15 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import serveStatic from "serve-static";
 import bodyParser from "body-parser";
+import WebSocket from "ws";
+import {RegisterGameEndpoints} from "./Games/GameEndpoints";
+import {Config} from "./config/config";
 
 // Create the app
 const app = express();
-const port = 5000;
+const port = Config.Port || 5000;
 const clientFolder = path.join(process.cwd(), 'client');
+
 
 // Set up basic settings
 app.use(express.static(clientFolder, {
@@ -21,7 +25,6 @@ app.use(bodyParser.json({
 }) as any);
 app.use(bodyParser.urlencoded({extended: true}) as any);
 
-
 app.get("/service-worker.js", (req, res) =>
 {
 	// Don't cache service worker is a best practice (otherwise clients wont get emergency bug fix)
@@ -29,6 +32,8 @@ app.get("/service-worker.js", (req, res) =>
 	res.set("Content-Type", "application/javascript");
 	serveStatic("/service-worker.js");
 });
+
+RegisterGameEndpoints(app);
 
 // Start the server
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));

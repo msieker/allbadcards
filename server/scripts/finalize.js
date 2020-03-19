@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolve = relativePath => path.resolve(appDirectory, relativePath);
+const output = resolve("output");
 const clientBuild = resolve("client/build");
 const clientOutput = resolve("output/client");
 
@@ -15,6 +16,8 @@ function copyOutput() {
 
 const finalize = () => {
     copyOutput();
+    fs.mkdir(path.resolve(output, "server/config"));
+    fs.copyFileSync(resolve("server/config/keys.json"), path.resolve(output, "server/config/keys.json"));
 };
 
 module.exports = {

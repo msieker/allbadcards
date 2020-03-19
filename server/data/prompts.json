@@ -1,0 +1,1407 @@
+[
+  {
+    "id": 0,
+    "prompt": "______ is a slippery slope that leads to ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 1,
+    "prompt": "______ would be woefully incomplete without ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 2,
+    "prompt": "______: good to the last drop.",
+    "special": ""
+  },
+  {
+    "id": 3,
+    "prompt": "______: kid tested, mother approved.",
+    "special": ""
+  },
+  {
+    "id": 4,
+    "prompt": "______: kid-tested, mother-approved.",
+    "special": ""
+  },
+  {
+    "id": 5,
+    "prompt": "______: Once you pop, the fun don't stop!",
+    "special": ""
+  },
+  {
+    "id": 6,
+    "prompt": "______?�Jim'll fix it!",
+    "special": ""
+  },
+  {
+    "id": 7,
+    "prompt": "______? There's an app for that.",
+    "special": ""
+  },
+  {
+    "id": 8,
+    "prompt": "______? Yeah, nah.",
+    "special": ""
+  },
+  {
+    "id": 9,
+    "prompt": "______. Awesome in theory, kind of a mess in practice.",
+    "special": ""
+  },
+  {
+    "id": 10,
+    "prompt": "______. Betcha can't have just one!",
+    "special": ""
+  },
+  {
+    "id": 11,
+    "prompt": "______. High five, bro.",
+    "special": ""
+  },
+  {
+    "id": 12,
+    "prompt": "______. It's a trap!",
+    "special": ""
+  },
+  {
+    "id": 13,
+    "prompt": "______. That was so metal.",
+    "special": ""
+  },
+  {
+    "id": 14,
+    "prompt": "______. That's how I want to die.",
+    "special": ""
+  },
+  {
+    "id": 15,
+    "prompt": "______. That's why mums go to Iceland.",
+    "special": ""
+  },
+  {
+    "id": 16,
+    "prompt": "????? Do NOT go here! Found _____ in my Kung Pao chicken!",
+    "special": ""
+  },
+  {
+    "id": 17,
+    "prompt": "50% of all marriages end in ______.",
+    "special": ""
+  },
+  {
+    "id": 18,
+    "prompt": "A recent laboratory study shows that undergraduates have 50% less sex after being exposed to ______.",
+    "special": ""
+  },
+  {
+    "id": 19,
+    "prompt": "A remarkable new study has shown that chimps have evolved their own primitive version of ______.",
+    "special": ""
+  },
+  {
+    "id": 20,
+    "prompt": "A romantic candlelit dinner would be incomplete without ______.",
+    "special": ""
+  },
+  {
+    "id": 21,
+    "prompt": "A romantic, candlelit dinner would be incomplete without ______.",
+    "special": ""
+  },
+  {
+    "id": 22,
+    "prompt": "A successful job interview begins with a firm handshake and ends with ______.",
+    "special": ""
+  },
+  {
+    "id": 23,
+    "prompt": "ABC presents: \"______: The Story of ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 24,
+    "prompt": "After eight years in the White House, how is Obama finally letting loose?",
+    "special": ""
+  },
+  {
+    "id": 25,
+    "prompt": "After four platinum albums and three Grammys, it's time to get back to my roots, to what inspired me to make music in the first place: ______.",
+    "special": ""
+  },
+  {
+    "id": 26,
+    "prompt": "After Hurricane Katrina, Sean Penn brought ______ to all the people of New Orleans.",
+    "special": ""
+  },
+  {
+    "id": 27,
+    "prompt": "After Hurricane Katrina, Sean Penn brought ______ to the people of New Orleans.",
+    "special": ""
+  },
+  {
+    "id": 28,
+    "prompt": "After months of practice with ______, I think I?m finally ready for ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 29,
+    "prompt": "After the earthquake, Sean Penn brought ______ to the people of Haiti.",
+    "special": ""
+  },
+  {
+    "id": 30,
+    "prompt": "Air Canada guidelines now prohibit ______ on airplanes.",
+    "special": ""
+  },
+  {
+    "id": 31,
+    "prompt": "Airport security�guidelines now prohibit ______ on airplanes.",
+    "special": ""
+  },
+  {
+    "id": 32,
+    "prompt": "Alternative medicine is now embracing the curative powers of ______.",
+    "special": ""
+  },
+  {
+    "id": 33,
+    "prompt": "And the Academy Award for ______ goes to ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 34,
+    "prompt": "And the�BAFTA�for ______ goes to ______.",
+    "special": ""
+  },
+  {
+    "id": 35,
+    "prompt": "And what did you bring for show and tell?",
+    "special": ""
+  },
+  {
+    "id": 36,
+    "prompt": "Anthropologists have recently discovered a primitive tribe that worships ______.",
+    "special": ""
+  },
+  {
+    "id": 37,
+    "prompt": "Arby's: We Have ______.",
+    "special": ""
+  },
+  {
+    "id": 38,
+    "prompt": "Are you thinking what I'm thinking, B1?\n\nI think I am, B2: it's ______ time!",
+    "special": ""
+  },
+  {
+    "id": 39,
+    "prompt": "As my New Year's resolution, I vow to give up ______.",
+    "special": ""
+  },
+  {
+    "id": 40,
+    "prompt": "As the mom of five rambunctious boys, I'm no stranger to ______.",
+    "special": ""
+  },
+  {
+    "id": 41,
+    "prompt": "As the mum of five rambunctious boys, I'm no stranger to ______.",
+    "special": ""
+  },
+  {
+    "id": 42,
+    "prompt": "Betcha can't have just one!",
+    "special": ""
+  },
+  {
+    "id": 43,
+    "prompt": "BILLY MAYS HERE FOR ______.",
+    "special": ""
+  },
+  {
+    "id": 44,
+    "prompt": "Bravo's new reality show features eight washed-up celebrities living with ______.",
+    "special": ""
+  },
+  {
+    "id": 45,
+    "prompt": "Brought to you by Bud Light?, the Official Beer of ______.",
+    "special": ""
+  },
+  {
+    "id": 46,
+    "prompt": "Brought to you by Molson Canadian, the Official Beer of ______.",
+    "special": ""
+  },
+  {
+    "id": 47,
+    "prompt": "Brought to you by XXXX Gold, the Official Beer of ______.",
+    "special": ""
+  },
+  {
+    "id": 48,
+    "prompt": "But before I kill you, Mr. Bond, I must show you ______.",
+    "special": ""
+  },
+  {
+    "id": 49,
+    "prompt": "CBC presents \"___: the Story of ___.",
+    "special": ""
+  },
+  {
+    "id": 50,
+    "prompt": "Channel 4�presents ______, the story of ______.",
+    "special": ""
+  },
+  {
+    "id": 51,
+    "prompt": "Channel 5's new reality show features eight washed-up celebrities living with ______.",
+    "special": ""
+  },
+  {
+    "id": 52,
+    "prompt": "Channel 9 is pleased to present its new variety show, \"Hey Hey It's ______.",
+    "special": ""
+  },
+  {
+    "id": 53,
+    "prompt": "Charades was ruined for me forever when my mom had to act out ______.",
+    "special": ""
+  },
+  {
+    "id": 54,
+    "prompt": "Check me out, yo! I call this dance move \"______.",
+    "special": ""
+  },
+  {
+    "id": 55,
+    "prompt": "Click Here for ______!!!",
+    "special": ""
+  },
+  {
+    "id": 56,
+    "prompt": "Coming this season, Samuel Beckett's classic existential play: Waiting for ______.",
+    "special": ""
+  },
+  {
+    "id": 57,
+    "prompt": "Coming to Broadway this season, ______: The Musical.",
+    "special": ""
+  },
+  {
+    "id": 58,
+    "prompt": "Coming to�the West End�this year, ______: The Musical.",
+    "special": ""
+  },
+  {
+    "id": 59,
+    "prompt": "Crikey! I've never seen ______ like this before! Let's get a bit closer.",
+    "special": ""
+  },
+  {
+    "id": 60,
+    "prompt": "CTV presents \"______: the Story of ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 61,
+    "prompt": "Daddy, why is mommy crying?",
+    "special": ""
+  },
+  {
+    "id": 62,
+    "prompt": "Daddy, why is mummy crying?",
+    "special": ""
+  },
+  {
+    "id": 63,
+    "prompt": "Dear Abby, I'm having some trouble with ______ and would like your advice.",
+    "special": ""
+  },
+  {
+    "id": 64,
+    "prompt": "Dear�Agony Aunt, I'm having some trouble with ________ and I need your advice.",
+    "special": ""
+  },
+  {
+    "id": 65,
+    "prompt": "Dear Sir or Madam, We regret to inform you that the Office of ______ has denied your request for ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 66,
+    "prompt": "Doctor, you've gone too far! The human body wasn't meant to withstand that amount of ______!",
+    "special": ""
+  },
+  {
+    "id": 67,
+    "prompt": "Dude, do not go in that bathroom. There's ______ in there.",
+    "special": ""
+  },
+  {
+    "id": 68,
+    "prompt": "Dude, do not go in that washroom. There's ______ in there.",
+    "special": ""
+  },
+  {
+    "id": 69,
+    "prompt": "Due to a PR fiasco, Walmart no longer offers ______.",
+    "special": ""
+  },
+  {
+    "id": 70,
+    "prompt": "During his childhood, Salvador Dali produced hundreds of paintings of ______.",
+    "special": ""
+  },
+  {
+    "id": 71,
+    "prompt": "During his midlife crisis, my dad got really into ______.",
+    "special": ""
+  },
+  {
+    "id": 72,
+    "prompt": "During Picasso's often-overlooked Brown Period, he produced hundreds of paintings of ______.",
+    "special": ""
+  },
+  {
+    "id": 73,
+    "prompt": "During sex, I like to think about ______.",
+    "special": ""
+  },
+  {
+    "id": 74,
+    "prompt": "Finally! A service that delivers ______ right to your door.",
+    "special": ""
+  },
+  {
+    "id": 75,
+    "prompt": "For my next trick, I will pull ______ out of ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 76,
+    "prompt": "Fun tip! When your man asks you to go down on him, try surprising him with ______ instead.",
+    "special": ""
+  },
+  {
+    "id": 77,
+    "prompt": "Future historians will agree that ______ marked the beginning of America's decline.",
+    "special": ""
+  },
+  {
+    "id": 78,
+    "prompt": "Having problems with ______? Try ______!",
+    "special": "PICK 2"
+  },
+  {
+    "id": 79,
+    "prompt": "Here is the church\nHere is the steeple\nOpen the doors\nAnd there is ______.",
+    "special": ""
+  },
+  {
+    "id": 80,
+    "prompt": "Hey guys, welcome to Boston Pizza! Would you like to start the night off right with ______?",
+    "special": ""
+  },
+  {
+    "id": 81,
+    "prompt": "Hey guys, welcome to Chili's! Would you like to start the night off right with ______?",
+    "special": ""
+  },
+  {
+    "id": 82,
+    "prompt": "Hey guys, welcome to Sizzler! Would you like to start the night off right with ______?",
+    "special": ""
+  },
+  {
+    "id": 83,
+    "prompt": "Hey guys, welcome to TGIF! Would you like to start the night off right with ______?",
+    "special": ""
+  },
+  {
+    "id": 84,
+    "prompt": "Hey Reddit! I'm ______. Ask me anything.",
+    "special": ""
+  },
+  {
+    "id": 85,
+    "prompt": "How am I maintaining my relationship status?",
+    "special": ""
+  },
+  {
+    "id": 86,
+    "prompt": "How did I lose my virginity?",
+    "special": ""
+  },
+  {
+    "id": 87,
+    "prompt": "I do not know with what weapons World War III will be fought, but World War IV will be fought with ______.",
+    "special": ""
+  },
+  {
+    "id": 88,
+    "prompt": "I drink to forget ______.",
+    "special": ""
+  },
+  {
+    "id": 89,
+    "prompt": "I get by with a little help from ______.",
+    "special": ""
+  },
+  {
+    "id": 90,
+    "prompt": "I got 99 problems but ______ ain't one.",
+    "special": ""
+  },
+  {
+    "id": 91,
+    "prompt": "I know when that hotline bling, that can only mean one thing: ______.",
+    "special": ""
+  },
+  {
+    "id": 92,
+    "prompt": "I learned the hard way that you can't cheer up a grieving friend with ______.",
+    "special": ""
+  },
+  {
+    "id": 93,
+    "prompt": "I never truly understood ______ until I encountered ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 94,
+    "prompt": "I spent my whole life working toward ______, only to have it ruined by ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 95,
+    "prompt": "I wish I hadn't lost the instruction manual for ______.",
+    "special": ""
+  },
+  {
+    "id": 96,
+    "prompt": "I'm going on a cleanse this week. Nothing but kale juice and ______.",
+    "special": ""
+  },
+  {
+    "id": 97,
+    "prompt": "I'm Lebron James, and when I'm not slamming dunks, I love ______.",
+    "special": ""
+  },
+  {
+    "id": 98,
+    "prompt": "I'm no doctor, but I'm pretty sure what you're suffering from is called \"______.",
+    "special": ""
+  },
+  {
+    "id": 99,
+    "prompt": "I'm sorry, Professor, but I couldn't complete my homework because of ______.",
+    "special": ""
+  },
+  {
+    "id": 100,
+    "prompt": "I'm sorry, Sir, but I couldn't complete my homework because of ______.",
+    "special": ""
+  },
+  {
+    "id": 101,
+    "prompt": "I?m not like the rest of you. I?m too rich and busy for ______.",
+    "special": ""
+  },
+  {
+    "id": 102,
+    "prompt": "If you can't be with the one you love, love ______.",
+    "special": ""
+  },
+  {
+    "id": 103,
+    "prompt": "IF you like ______, YOU MIGHT BE A REDNECK.",
+    "special": ""
+  },
+  {
+    "id": 104,
+    "prompt": "In 1,000 years, when paper money is a distant memory, how will we pay for goods and services?",
+    "special": ""
+  },
+  {
+    "id": 105,
+    "prompt": "In 1,000 years, when paper money is but a distant memory, ______ will be our currency.",
+    "special": ""
+  },
+  {
+    "id": 106,
+    "prompt": "In a world ravaged by ______ our only solace is ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 107,
+    "prompt": "In a world ravaged by ______, our only solace is ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 108,
+    "prompt": "In an attempt to reach a wider audience, the National Museum of Australia has opened an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 109,
+    "prompt": "In an attempt to reach a wider audience, the Smithsonian Museum of Natural History has opened an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 110,
+    "prompt": "In Australia, ______ is twice as big and twice as deadly.",
+    "special": ""
+  },
+  {
+    "id": 111,
+    "prompt": "In Belmarsh Prison, word is you can trade 200 cigarettes for ______.",
+    "special": ""
+  },
+  {
+    "id": 112,
+    "prompt": "In�her latest feature-length film,�Tracy Beaker struggles with ______ for the first time.",
+    "special": ""
+  },
+  {
+    "id": 113,
+    "prompt": "In his new self-produced album, Kanye West raps over the sounds of ______.",
+    "special": ""
+  },
+  {
+    "id": 114,
+    "prompt": "In his new summer comedy, Rob Schneider is ______ trapped in the body of ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 115,
+    "prompt": "In L.A. County Jail, word is you can trade 200 cigarettes for ______.",
+    "special": ""
+  },
+  {
+    "id": 116,
+    "prompt": "In M. Night Shyamalan's new movie, Bruce Willis discovers that ______ had really been ______ all along.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 117,
+    "prompt": "In Michael Jackson's final moments, he thought about ______.",
+    "special": ""
+  },
+  {
+    "id": 118,
+    "prompt": "In Rome, there are whisperings that the Vatican has a secret room devoted to ______.",
+    "special": ""
+  },
+  {
+    "id": 119,
+    "prompt": "In the new Disney Channel Original Movie, Hannah Montana struggles with ______ for the first time.",
+    "special": ""
+  },
+  {
+    "id": 120,
+    "prompt": "In the seventh circle of Hell, sinners must endure ______ for all eternity.",
+    "special": ""
+  },
+  {
+    "id": 121,
+    "prompt": "In�Wormwood Scrubs, word is you can trade 200 cigarettes for ______.",
+    "special": ""
+  },
+  {
+    "id": 122,
+    "prompt": "Instead of coal,�Father Christmas�now gives the bad children ______.",
+    "special": ""
+  },
+  {
+    "id": 123,
+    "prompt": "Instead of coal, Santa now gives the bad children ______.",
+    "special": ""
+  },
+  {
+    "id": 124,
+    "prompt": "Introducing the amazing superhero/sidekick duo! It's ______ and ______!",
+    "special": "PICK 2"
+  },
+  {
+    "id": 125,
+    "prompt": "Introducing X-Treme Baseball! It's like baseball, but with ______!",
+    "special": ""
+  },
+  {
+    "id": 126,
+    "prompt": "It's a trap!",
+    "special": ""
+  },
+  {
+    "id": 127,
+    "prompt": "It?s a pity that kids these days are all getting involved with ______.",
+    "special": ""
+  },
+  {
+    "id": 128,
+    "prompt": "Just once, I'd like to hear you say \"Thanks, Mom. Thanks for ______.",
+    "special": ""
+  },
+  {
+    "id": 129,
+    "prompt": "Just once, I'd like to hear you say \"Thanks, Mum. Thanks for ______.",
+    "special": ""
+  },
+  {
+    "id": 130,
+    "prompt": "Just saw this upsetting video! Please retweet!! #stop______",
+    "special": ""
+  },
+  {
+    "id": 131,
+    "prompt": "Kids, I don't need drugs to get high. I'm high on ______.",
+    "special": ""
+  },
+  {
+    "id": 132,
+    "prompt": "Life for Aboriginal people was forever changed when the white man introduced them to ______.",
+    "special": ""
+  },
+  {
+    "id": 133,
+    "prompt": "Life for American Indians was forever changed when the White Man introduced them to ______.",
+    "special": ""
+  },
+  {
+    "id": 134,
+    "prompt": "Life was difficult for cavemen before ______.",
+    "special": ""
+  },
+  {
+    "id": 135,
+    "prompt": "Lifetime? presents ______: the Story of ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 136,
+    "prompt": "Lifetime? presents \"______: the Story of ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 137,
+    "prompt": "Lovin? you is easy ?cause you?re ______.",
+    "special": ""
+  },
+  {
+    "id": 138,
+    "prompt": "Major League Baseball has banned ______ for giving players an unfair advantage.",
+    "special": ""
+  },
+  {
+    "id": 139,
+    "prompt": "Make a haiku.",
+    "special": "DRAW 2, PICK 3"
+  },
+  {
+    "id": 140,
+    "prompt": "Mate, do not go in that bathroom. There's ______ in there.",
+    "special": ""
+  },
+  {
+    "id": 141,
+    "prompt": "Mate, do not go in that toilet. There's ______ in there.",
+    "special": ""
+  },
+  {
+    "id": 142,
+    "prompt": "Maybe she's born with it. Maybe it's ______.",
+    "special": ""
+  },
+  {
+    "id": 143,
+    "prompt": "Men's Wearhouse: You're gonna like ______. I guarantee it.",
+    "special": ""
+  },
+  {
+    "id": 144,
+    "prompt": "Military historians remember Alexander the Great for his brilliant use of ______ against the Persians.",
+    "special": ""
+  },
+  {
+    "id": 145,
+    "prompt": "Money can?t buy me love, but it can buy me ______.",
+    "special": ""
+  },
+  {
+    "id": 146,
+    "prompt": "Mr. and Mrs. Diaz, we called you in because we're concerned about Cynthia. Are you aware that your daughter is ______?",
+    "special": ""
+  },
+  {
+    "id": 147,
+    "prompt": "MTV's new reality show features eight washed-up celebrities living with ______.",
+    "special": ""
+  },
+  {
+    "id": 148,
+    "prompt": "My fellow Americans: Before this decade is out, we will have ______ on the moon!",
+    "special": ""
+  },
+  {
+    "id": 149,
+    "prompt": "My mom freaked out when she looked at my browser history and found ______.com/______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 150,
+    "prompt": "My plan for world domination begins with ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 151,
+    "prompt": "Next from J.K. Rowling: Harry Potter and the Chamber of ______.",
+    "special": ""
+  },
+  {
+    "id": 152,
+    "prompt": "Next from J.K. Rowling: Harry Potter and the Chamber of ______.",
+    "special": ""
+  },
+  {
+    "id": 153,
+    "prompt": "Next on ESPN2: The World Series of ______.",
+    "special": ""
+  },
+  {
+    "id": 154,
+    "prompt": "Next on Eurosport: The World Championship of _______.",
+    "special": ""
+  },
+  {
+    "id": 155,
+    "prompt": "Next on Nine's Wide World of Sports: The World Championship of ______.",
+    "special": ""
+  },
+  {
+    "id": 156,
+    "prompt": "Next on Sky Sports: The World Championship�of ________.",
+    "special": ""
+  },
+  {
+    "id": 157,
+    "prompt": "Next on Sky Sports: The World Champsion�of ________.",
+    "special": ""
+  },
+  {
+    "id": 158,
+    "prompt": "Next on TSN: The World Series of ______.",
+    "special": ""
+  },
+  {
+    "id": 159,
+    "prompt": "Next up on Channel 4: Ramsay's ______ Nightmares.",
+    "special": ""
+  },
+  {
+    "id": 160,
+    "prompt": "Nobody expects the Spanish Inquisition. Our chief weapons are fear, surprise, and ________.",
+    "special": ""
+  },
+  {
+    "id": 161,
+    "prompt": "Now at the National Museum of Australia: an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 162,
+    "prompt": "Now at the Natural History Museum: an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 163,
+    "prompt": "Now at the Royal Ontario Museum: an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 164,
+    "prompt": "Now at the Smithsonian: an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 165,
+    "prompt": "O Canada, we stand on guard for ______.",
+    "special": ""
+  },
+  {
+    "id": 166,
+    "prompt": "Oi! Show us ______!",
+    "special": ""
+  },
+  {
+    "id": 167,
+    "prompt": "Old MacDonald had ______. E-I-E-I-O.",
+    "special": ""
+  },
+  {
+    "id": 168,
+    "prompt": "Only two things in life are certain: death and ______.",
+    "special": ""
+  },
+  {
+    "id": 169,
+    "prompt": "Penalty! ______: that's 5 minutes in the box!",
+    "special": ""
+  },
+  {
+    "id": 170,
+    "prompt": "Qantas now prohibits ______ on airplanes.",
+    "special": ""
+  },
+  {
+    "id": 171,
+    "prompt": "Rumor has it that Vladimir Putin's favorite dish is ______ stuffed with ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 172,
+    "prompt": "Science will never explain ______.",
+    "special": ""
+  },
+  {
+    "id": 173,
+    "prompt": "Skidamarink a dink a dink, skidamarink a doo, I love ______.",
+    "special": ""
+  },
+  {
+    "id": 174,
+    "prompt": "Sorry everyone, I just ______.",
+    "special": ""
+  },
+  {
+    "id": 175,
+    "prompt": "Step 1: ______.\nStep 2: ______.\nStep 3: Profit.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 176,
+    "prompt": "Studies show that lab rats navigate mazes 50% faster after being exposed to ______.",
+    "special": ""
+  },
+  {
+    "id": 177,
+    "prompt": "TFL apologizes for the delay in train service due to ______.",
+    "special": ""
+  },
+  {
+    "id": 178,
+    "prompt": "That's right, I killed ______. How, you ask? ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 179,
+    "prompt": "The blind date was going horribly until we discovered our shared interest in ______.",
+    "special": ""
+  },
+  {
+    "id": 180,
+    "prompt": "The class field trip was completely ruined by ______.",
+    "special": ""
+  },
+  {
+    "id": 181,
+    "prompt": "The Five Stages of Grief: denial, anger, bargaining, ______, acceptance.",
+    "special": ""
+  },
+  {
+    "id": 182,
+    "prompt": "The healing process began when I joined a support group for victims of ______.",
+    "special": ""
+  },
+  {
+    "id": 183,
+    "prompt": "The Natural History Museum�has just opened an interactive exhibit on ________.",
+    "special": ""
+  },
+  {
+    "id": 184,
+    "prompt": "The new Chevy Tahoe. With the power and space to take ______ everywhere you go.",
+    "special": ""
+  },
+  {
+    "id": 185,
+    "prompt": "The school excursion was completely ruined by ______.",
+    "special": ""
+  },
+  {
+    "id": 186,
+    "prompt": "The�school�field trip was completely ruined by ______.",
+    "special": ""
+  },
+  {
+    "id": 187,
+    "prompt": "The school trip was completely ruined by ______.",
+    "special": ""
+  },
+  {
+    "id": 188,
+    "prompt": "The secret to a lasting marriage is communication, communication, and ______.",
+    "special": ""
+  },
+  {
+    "id": 189,
+    "prompt": "The Smithsonian Museum of Natural History has just opened an interactive exhibit on ______.",
+    "special": ""
+  },
+  {
+    "id": 190,
+    "prompt": "The TFL apologizes for the delay in train service due to ________.�",
+    "special": ""
+  },
+  {
+    "id": 191,
+    "prompt": "The theme for next year's Eurovision Song Contest is \"We are ________.",
+    "special": ""
+  },
+  {
+    "id": 192,
+    "prompt": "The U.S. has begun airdropping ______ to the children of Afghanistan.",
+    "special": ""
+  },
+  {
+    "id": 193,
+    "prompt": "They said we were crazy. They said we couldn't put ______ inside of ______. They were wrong.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 194,
+    "prompt": "This is the way the world ends\nThis is the way the world ends\nNot with a bang but with ______.",
+    "special": ""
+  },
+  {
+    "id": 195,
+    "prompt": "This is your captain speaking. Fasten your seatbelts and prepare for ______.",
+    "special": ""
+  },
+  {
+    "id": 196,
+    "prompt": "This season at Steppenwolf, Samuel Beckett's classic existential play: Waitng for ______.",
+    "special": ""
+  },
+  {
+    "id": 197,
+    "prompt": "This season at the old Vic, Samuel Beckett's classic existential play: Waitng for ______.",
+    "special": ""
+  },
+  {
+    "id": 198,
+    "prompt": "This season at the Princess of Wales Theatre, Samuel Beckett's classic existential play: Waiting for ______.",
+    "special": ""
+  },
+  {
+    "id": 199,
+    "prompt": "This season at the Sydney Opera House, Samuel Beckett's classic existential play: Waiting for ______.",
+    "special": ""
+  },
+  {
+    "id": 200,
+    "prompt": "Today on Jerry Springer: \"Help! My son is ______!",
+    "special": ""
+  },
+  {
+    "id": 201,
+    "prompt": "Today on Maury: \"Help! My son is ______!",
+    "special": ""
+  },
+  {
+    "id": 202,
+    "prompt": "Today on The Jeremy Kyle Show: \"Help! My son is ________!",
+    "special": ""
+  },
+  {
+    "id": 203,
+    "prompt": "Tonight's top story: What you don't know about ________ could kill you.",
+    "special": ""
+  },
+  {
+    "id": 204,
+    "prompt": "TSA guidelines now prohibit ______ on airplanes.",
+    "special": ""
+  },
+  {
+    "id": 205,
+    "prompt": "Turns out that ______-Man was neither the hero we needed nor wanted.",
+    "special": ""
+  },
+  {
+    "id": 206,
+    "prompt": "Uh, hey guys, I know this was my idea, but I'm having serious doubts about ______.",
+    "special": ""
+  },
+  {
+    "id": 207,
+    "prompt": "UKIP: Putting ______ First!",
+    "special": ""
+  },
+  {
+    "id": 208,
+    "prompt": "War! What is it good for?",
+    "special": ""
+  },
+  {
+    "id": 209,
+    "prompt": "Well if you'll excuse me, gentlemen, I have a date with ______.",
+    "special": ""
+  },
+  {
+    "id": 210,
+    "prompt": "What am I giving up for Lent?",
+    "special": ""
+  },
+  {
+    "id": 211,
+    "prompt": "What are my parents hiding from me?",
+    "special": ""
+  },
+  {
+    "id": 212,
+    "prompt": "What are school administrators using to curb rampant teenage pregnancy?",
+    "special": ""
+  },
+  {
+    "id": 213,
+    "prompt": "What broke up the original Wiggles?",
+    "special": ""
+  },
+  {
+    "id": 214,
+    "prompt": "What brought the orgy to a grinding halt?",
+    "special": ""
+  },
+  {
+    "id": 215,
+    "prompt": "What did I bring back from Amsterdam?",
+    "special": ""
+  },
+  {
+    "id": 216,
+    "prompt": "What did I bring back from Bali?",
+    "special": ""
+  },
+  {
+    "id": 217,
+    "prompt": "What did I bring back from Mexico?",
+    "special": ""
+  },
+  {
+    "id": 218,
+    "prompt": "What did the US airdrop to the children of Afghanistan?",
+    "special": ""
+  },
+  {
+    "id": 219,
+    "prompt": "What did Vin Diesel eat for dinner?",
+    "special": ""
+  },
+  {
+    "id": 220,
+    "prompt": "What do old people smell like?",
+    "special": ""
+  },
+  {
+    "id": 221,
+    "prompt": "What does Dick Cheney prefer?",
+    "special": ""
+  },
+  {
+    "id": 222,
+    "prompt": "What don't you want to find in your Chinese food?",
+    "special": ""
+  },
+  {
+    "id": 223,
+    "prompt": "What don't you want to find in your doner kebab?",
+    "special": ""
+  },
+  {
+    "id": 224,
+    "prompt": "What don't you want to find in your Kung Pao chicken?",
+    "special": ""
+  },
+  {
+    "id": 225,
+    "prompt": "What don't you want to find in your Mongolian beef?",
+    "special": ""
+  },
+  {
+    "id": 226,
+    "prompt": "What ended my last relationship?",
+    "special": ""
+  },
+  {
+    "id": 227,
+    "prompt": "What gets better with age?",
+    "special": ""
+  },
+  {
+    "id": 228,
+    "prompt": "What gives me uncontrollable gas?",
+    "special": ""
+  },
+  {
+    "id": 229,
+    "prompt": "What has been making life difficult at the nudist colony?",
+    "special": ""
+  },
+  {
+    "id": 230,
+    "prompt": "What helps Barack Obama unwind?",
+    "special": ""
+  },
+  {
+    "id": 231,
+    "prompt": "What helps Obama unwind?",
+    "special": ""
+  },
+  {
+    "id": 232,
+    "prompt": "What is Batman's guilty pleasure?",
+    "special": ""
+  },
+  {
+    "id": 233,
+    "prompt": "What is George W. Bush thinking about right now?",
+    "special": ""
+  },
+  {
+    "id": 234,
+    "prompt": "What kept Margaret Thatcher busy in her waning years?",
+    "special": ""
+  },
+  {
+    "id": 235,
+    "prompt": "What left this stain on my couch?",
+    "special": ""
+  },
+  {
+    "id": 236,
+    "prompt": "What made my first kiss so awkward?",
+    "special": ""
+  },
+  {
+    "id": 237,
+    "prompt": "What makes life worth living?",
+    "special": ""
+  },
+  {
+    "id": 238,
+    "prompt": "What makes me a true blue Aussie?",
+    "special": ""
+  },
+  {
+    "id": 239,
+    "prompt": "What never fails to liven up the party?",
+    "special": ""
+  },
+  {
+    "id": 240,
+    "prompt": "What will always get you laid?",
+    "special": ""
+  },
+  {
+    "id": 241,
+    "prompt": "What will I bring back in time to convince people that I am a powerful wizard?",
+    "special": ""
+  },
+  {
+    "id": 242,
+    "prompt": "What would grandma find disturbing, yet oddly charming?",
+    "special": ""
+  },
+  {
+    "id": 243,
+    "prompt": "What's a girl's best friend?",
+    "special": ""
+  },
+  {
+    "id": 244,
+    "prompt": "What's my anti-drug?",
+    "special": ""
+  },
+  {
+    "id": 245,
+    "prompt": "What's my secret power?",
+    "special": ""
+  },
+  {
+    "id": 246,
+    "prompt": "What's Teach for America using to inspire inner city students to succeed?",
+    "special": ""
+  },
+  {
+    "id": 247,
+    "prompt": "What's that smell?",
+    "special": ""
+  },
+  {
+    "id": 248,
+    "prompt": "What's that sound?",
+    "special": ""
+  },
+  {
+    "id": 249,
+    "prompt": "What's the Canadian government using to inspire rural students to succeed?",
+    "special": ""
+  },
+  {
+    "id": 250,
+    "prompt": "What's the crustiest?",
+    "special": ""
+  },
+  {
+    "id": 251,
+    "prompt": "What's the most emo?",
+    "special": ""
+  },
+  {
+    "id": 252,
+    "prompt": "What's the new fad diet?",
+    "special": ""
+  },
+  {
+    "id": 253,
+    "prompt": "What's the next Happy Meal? toy?",
+    "special": ""
+  },
+  {
+    "id": 254,
+    "prompt": "What's the next superhero/sidekick duo?",
+    "special": "PICK 2"
+  },
+  {
+    "id": 255,
+    "prompt": "What's there a ton of in heaven?",
+    "special": ""
+  },
+  {
+    "id": 256,
+    "prompt": "What's there a tonne of in heaven?",
+    "special": ""
+  },
+  {
+    "id": 257,
+    "prompt": "When all else fails, I can always masturbate to ______.",
+    "special": ""
+  },
+  {
+    "id": 258,
+    "prompt": "When I am a billionare, I shall erect a 20-meter statue to commemorate ______.",
+    "special": ""
+  },
+  {
+    "id": 259,
+    "prompt": "When I am a billionare, I shall erect a 20-metre statue to commemorate ______.",
+    "special": ""
+  },
+  {
+    "id": 260,
+    "prompt": "When I am a billionare, I shall erect a 50-foot statue to commemorate ______.",
+    "special": ""
+  },
+  {
+    "id": 261,
+    "prompt": "When I am President of the United States, I will create the Department of ______.",
+    "special": ""
+  },
+  {
+    "id": 262,
+    "prompt": "When I am President, I will create the Department of ______.",
+    "special": ""
+  },
+  {
+    "id": 263,
+    "prompt": "When I am Prime Minister of Canada, I will create the Department of ______.",
+    "special": ""
+  },
+  {
+    "id": 264,
+    "prompt": "When I am Prime Minister of Canada, I will create the Ministry of ______.",
+    "special": ""
+  },
+  {
+    "id": 265,
+    "prompt": "When I am Prime Minister of the United Kingdom, I will create the Ministry�of ______.",
+    "special": ""
+  },
+  {
+    "id": 266,
+    "prompt": "When I am Prime Minister, I will create the Department of ______.",
+    "special": ""
+  },
+  {
+    "id": 267,
+    "prompt": "When I am Prime Minister, I will create the Ministry of ______.",
+    "special": ""
+  },
+  {
+    "id": 268,
+    "prompt": "When I pooped, what came out of my butt?",
+    "special": ""
+  },
+  {
+    "id": 269,
+    "prompt": "When I was tripping on acid, ______ turned into ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 270,
+    "prompt": "When I'm in prison, I'll have ______ smuggled in.",
+    "special": ""
+  },
+  {
+    "id": 271,
+    "prompt": "When Pharaoh remained unmoved, Moses called down a Plague of ______.",
+    "special": ""
+  },
+  {
+    "id": 272,
+    "prompt": "When you get right down to it, ______ is just ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 273,
+    "prompt": "While the United States raced the Soviet Union to the moon, the Mexican government funneled millions of pesos into research on ______.",
+    "special": ""
+  },
+  {
+    "id": 274,
+    "prompt": "White people like ______.",
+    "special": ""
+  },
+  {
+    "id": 275,
+    "prompt": "Who stole the cookies from the cookie jar?",
+    "special": ""
+  },
+  {
+    "id": 276,
+    "prompt": "Why am I sticky?",
+    "special": ""
+  },
+  {
+    "id": 277,
+    "prompt": "Why can't I sleep at night?",
+    "special": ""
+  },
+  {
+    "id": 278,
+    "prompt": "Why do I hurt all over?",
+    "special": ""
+  },
+  {
+    "id": 279,
+    "prompt": "With enough time and pressure, ______ will turn into ______.",
+    "special": "PICK 2"
+  },
+  {
+    "id": 280,
+    "prompt": "Your persistence is admirable, my dear Prince. But you cannot win my heart with ______ alone.",
+    "special": ""
+  }
+]
