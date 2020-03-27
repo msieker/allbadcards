@@ -13,7 +13,7 @@ export abstract class DataStore<TState extends {},
 
 	protected update(data: Partial<TState>)
 	{
-		this._currentState = Object.assign(this._currentState, data) as TState;
+		this._currentState = {...this._currentState, ...data};
 		this.broadcast();
 	}
 
@@ -28,7 +28,7 @@ export abstract class DataStore<TState extends {},
 		return this._observers;
 	}
 
-	public listen(callback: (data: TState) => void, params: TObserverParams = undefined)
+	public listen(callback: (data: TState) => void, params?: TObserverParams)
 	{
 		const observer = new DataStoreObserver(callback, params);
 

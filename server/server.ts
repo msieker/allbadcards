@@ -4,9 +4,10 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import serveStatic from "serve-static";
 import bodyParser from "body-parser";
-import WebSocket from "ws";
 import {RegisterGameEndpoints} from "./Games/GameEndpoints";
 import {Config} from "./config/config";
+import {CardManager} from "./Games/CardManager";
+import {CreateGameManager} from "./Games/GameManager";
 
 // Create the app
 const app = express();
@@ -33,8 +34,11 @@ app.get("/service-worker.js", (req, res) =>
 	serveStatic("/service-worker.js");
 });
 
-RegisterGameEndpoints(app);
+CardManager.initialize();
+RegisterGameEndpoints(app, clientFolder);
 
 // Start the server
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 server.setTimeout(10000);
+
+CreateGameManager(server);

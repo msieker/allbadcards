@@ -4,8 +4,9 @@ import {GiCardDraw, GiCardPlay} from "react-icons/all";
 import Button from "@material-ui/core/Button";
 import {RouteComponentProps, withRouter} from "react-router";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import {Platform} from "../../Global/Platform/platform";
+import {GameItem, Platform} from "../../Global/Platform/platform";
 import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
+import {NicknameDialog} from "../../UI/NicknameDialog";
 
 interface IGameDashboardProps extends RouteComponentProps
 {
@@ -21,7 +22,10 @@ type State = ICreationState;
 interface ICreationState
 {
 	userData: IUserData;
+	nicknameDialogOpen: boolean;
 }
+
+export const gamesOwnedLsKey = "games-owned";
 
 class GameDashboard extends React.Component<Props, State>
 {
@@ -30,7 +34,8 @@ class GameDashboard extends React.Component<Props, State>
 		super(props);
 
 		this.state = {
-			userData: UserDataStore.state
+			userData: UserDataStore.state,
+			nicknameDialogOpen: false
 		};
 	}
 
@@ -43,9 +48,30 @@ class GameDashboard extends React.Component<Props, State>
 
 	private createGame = async () =>
 	{
-		const game = await Platform.createGame(this.state.userData.playerGuid);
-		this.props.history.push(`/game/start/${game.id}`)
+		this.setState({
+			nicknameDialogOpen: true
+		});
 	};
+
+	private onNicknameClose = () => {
+		this.setState({
+			nicknameDialogOpen: false
+		});
+	};
+
+	private onNicknameConfirm = async (nickname: string) => {
+		const game = await Platform.createGame(this.state.userData.playerGuid, nickname);
+		this.storeOwnedGames(game);
+		this.props.history.push(`/game/${game.id}`)
+	};
+
+	private storeOwnedGames(game: GameItem)
+	{
+		const gamesOwnedString = localStorage.getItem(gamesOwnedLsKey) ?? "[]";
+		const gamesOwned = JSON.parse(gamesOwnedString) as string[];
+		gamesOwned.push(game.id);
+		localStorage.setItem(gamesOwnedLsKey, JSON.stringify(gamesOwned));
+	}
 
 	public render()
 	{
@@ -66,6 +92,12 @@ class GameDashboard extends React.Component<Props, State>
 						New Game
 					</Button>
 				</ButtonGroup>
+				<NicknameDialog
+					open={this.state.nicknameDialogOpen}
+					onClose={this.onNicknameClose}
+					onConfirm={this.onNicknameConfirm}
+					title={"Please enter your nickname:"}
+				/>
 			</>
 		);
 	}

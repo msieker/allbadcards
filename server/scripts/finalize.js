@@ -17,7 +17,9 @@ function copyOutput() {
 const finalize = () => {
     copyOutput();
     fs.mkdir(path.resolve(output, "server/config"));
+    fs.mkdir(path.resolve(output, "server/data"));
     fs.copyFileSync(resolve("server/config/keys.json"), path.resolve(output, "server/config/keys.json"));
+    fs.copySync(resolve("server/data"), path.resolve(output, "server/data"));
 };
 
 module.exports = {

@@ -1,5 +1,6 @@
 import {DataStore} from "./DataStore";
 import shortid from "shortid";
+import {GameDataStore} from "./GameDataStore";
 
 export interface IUserData
 {
@@ -9,12 +10,20 @@ export interface IUserData
 
 class _UserDataStore extends DataStore<IUserData>
 {
+	private static lsKey = "guid";
+
 	public static Instance = new _UserDataStore({
-		playerGuid: _UserDataStore.generateGuid(),
+		playerGuid: _UserDataStore.newOrReuseGuid(),
 		wsId: null
 	});
 
-	private ws: WebSocket;
+	private static newOrReuseGuid()
+	{
+		const stored = localStorage.getItem(_UserDataStore.lsKey);
+		const toUse = stored ||  _UserDataStore.generateGuid();
+		localStorage.setItem(_UserDataStore.lsKey, toUse);
+		return toUse;
+	}
 
 	private static generateGuid()
 	{
@@ -23,18 +32,7 @@ class _UserDataStore extends DataStore<IUserData>
 
 	public initialize()
 	{
-		const url = `ws://${location.hostname}:8080`;
-		this.ws = new WebSocket(url);
-
-		this.ws.onopen = (e) =>
-		{
-			console.log(e);
-		};
-
-		this.ws.onmessage = (e) =>
-		{
-			console.log(e);
-		};
+		GameDataStore.initialize();
 	}
 }
 

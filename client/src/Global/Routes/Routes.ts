@@ -16,7 +16,7 @@ export class SiteRoute<T extends object = {}>
 
 	public resolve(params?: T)
 	{
-		const paramsWithDefaults = {...this.defaults, ...params};
+		const paramsWithDefaults = {...this.defaults, ...params} as T;
 		return this.compiler(paramsWithDefaults);
 	}
 }
@@ -24,5 +24,5 @@ export class SiteRoute<T extends object = {}>
 export class SiteRoutes
 {
 	public static Games = new SiteRoute("/games");
-	public static Game = new SiteRoute<{id: string}>("/game/:stage/:id");
+	public static Game = new SiteRoute<{id: string}>("/game/:id");
 }

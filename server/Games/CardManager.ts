@@ -27,8 +27,8 @@ export class CardManager
 	{
 		const blackCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/prompts.json"), "utf8");
 		const whiteCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/responses.json"), "utf8");
-		this.blackCards = JSON.parse(blackCardsFile)[0];
-		this.whiteCards = JSON.parse(whiteCardsFile)[0];
+		this.blackCards = JSON.parse(blackCardsFile);
+		this.whiteCards = JSON.parse(whiteCardsFile);
 	}
 
 	private static getAllowedCard(cards: ICard[], usedCards: number[])
@@ -47,16 +47,15 @@ export class CardManager
 		return newCard;
 	}
 
-	public static async nextBlackCard(gameItem: GameItem)
+	public static nextBlackCard(gameItem: GameItem)
 	{
 		const newCard = this.getAllowedCard(this.blackCards, gameItem.usedBlackCards);
 
 		const newGame = {...gameItem};
+		newGame.blackCard = newCard.id;
 		newGame.usedBlackCards.push(newCard.id);
 
-		await GameManager.updateGame(newGame);
-
-		return newCard;
+		return newGame;
 	}
 
 	public static async dealWhiteCards(gameItem: GameItem)
@@ -85,5 +84,15 @@ export class CardManager
 		await GameManager.updateGame(newGame);
 
 		return newHands;
+	}
+
+	public static getWhiteCard(cardId: number)
+	{
+		return this.whiteCards[cardId];
+	}
+
+	public static getBlackCard(cardId: number)
+	{
+		return this.blackCards[cardId];
 	}
 }

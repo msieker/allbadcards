@@ -1,14 +1,9 @@
 import React from "react";
-import {Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
-import {GoPerson} from "react-icons/all";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Divider from "@material-ui/core/Divider";
 import {makeStyles} from "@material-ui/core/styles";
 import GamePreview from "./GamePreview";
+import {Platform} from "../../Global/Platform/platform";
+import {UserDataStore} from "../../Global/DataStore/UserDataStore";
 
 interface IGameStartProps
 {
@@ -26,11 +21,14 @@ const useStyles = makeStyles({
 
 const GameStart: React.FC<IGameStartProps> = (props) =>
 {
-	const classes = useStyles();
+	const onClickStart = () => {
+		Platform.startGame(UserDataStore.state.playerGuid, props.id)
+			.catch(e => console.error(e));
+	};
 
 	return (
 		<GamePreview id={props.id}>
-			<Button variant={"contained"} color={"primary"}>
+			<Button variant={"contained"} color={"primary"} onClick={onClickStart}>
 				Start
 			</Button>
 		</GamePreview>

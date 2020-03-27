@@ -2,7 +2,10 @@ import {Database} from "../DB/Database";
 import shortid from "shortid";
 import {CardManager} from "./CardManager";
 import WebSocket from "ws";
-import * as https from "https";
+import {GameMessage} from "../SocketMessages/GameMessage";
+import {Express} from "express";
+import * as http from "http";
+import {Config} from "../config/config";
 
 interface IWSMessage
 {
@@ -23,6 +26,7 @@ export interface GameItem
 	id: string;
 	ownerGuid: string;
 	chooserGuid: string | null;
+	started: boolean;
 	dateCreated: Date;
 	public: boolean;
 	players: { [key: string]: GamePlayer };
@@ -31,25 +35,45 @@ export interface GameItem
 	roundCards: { [key: string]: number };
 	usedBlackCards: number[];
 	usedWhiteCards: number[];
+	revealIndex: number;
 }
+
+interface ICard
+{
+	id: number;
+}
+
+interface IBlackCard extends ICard
+{
+	prompt: string;
+	special: string;
+}
+
+interface IWhiteCard extends ICard
+{
+	response: string;
+}
+
+export let GameManager: _GameManager;
 
 class _GameManager
 {
-	public static Instance = new _GameManager();
-
 	private wss: WebSocket.Server;
 
 	// key = playerGuid, value = WS key
-	private wsClientPlayerMap: { [key: string]: string };
+	private wsClientPlayerMap: { [key: string]: string[] } = {};
 
-	constructor()
+	constructor(server: http.Server)
 	{
 		console.log("Starting WebSocket Server");
 
 		Database.initialize();
 
+		const port = Config.Environment === "local" ? {port: 8080} : undefined;
+
 		this.wss = new WebSocket.Server({
-			port: 8080
+			server,
+			...port
 		});
 
 		this.wss.on("connection", (ws, req) =>
@@ -61,13 +85,27 @@ class _GameManager
 				ws.on("message", (message) =>
 				{
 					const data = JSON.parse(message as string) as IWSMessage;
-					if (!(data.playerGuid in this.wsClientPlayerMap))
+					const existingConnections = this.wsClientPlayerMap[data.playerGuid] ?? [];
+					this.wsClientPlayerMap[data.playerGuid] = [id, ...existingConnections];
+				});
+
+				ws.on("close", () => {
+					const matchingPlayerGuid = Object.keys(this.wsClientPlayerMap)
+						.find(playerGuid => this.wsClientPlayerMap[playerGuid].includes(id));
+
+					if(matchingPlayerGuid)
 					{
-						this.wsClientPlayerMap[data.playerGuid] = id;
+						const existingConnections = this.wsClientPlayerMap[matchingPlayerGuid];
+						this.wsClientPlayerMap[matchingPlayerGuid] = existingConnections.filter(a => a !== id);
 					}
 				});
 			}
 		});
+	}
+
+	public static create(server: http.Server)
+	{
+		GameManager = new _GameManager(server);
 	}
 
 	private get games()
@@ -75,7 +113,18 @@ class _GameManager
 		return Database.db.collection<GameItem>("games");
 	}
 
-	private async getGame(gameId: string)
+	private createPlayer(playerGuid: string, nickname: string, isSpectating: boolean): GamePlayer
+	{
+		return {
+			guid: playerGuid,
+			whiteCards: [],
+			nickname,
+			wins: 0,
+			isSpectating
+		};
+	}
+
+	public async getGame(gameId: string)
 	{
 		let existingGame: GameItem | null;
 		try
@@ -101,22 +150,34 @@ class _GameManager
 	{
 		await Database.db.collection<GameItem>("games").updateOne({
 			id: newGame.id
-		}, newGame);
-
-		const playerGuids = Object.keys(newGame.players);
-		const wsIds = playerGuids.map(pg => this.wsClientPlayerMap[pg]);
-		this.wss.clients.forEach(ws =>
-		{
-			if (wsIds.includes((ws as any).id))
-			{
-				ws.send(newGame);
-			}
+		}, {
+			$set: newGame
 		});
+
+		this.updateSocketGames(newGame);
 
 		return newGame;
 	}
 
-	public async createGame(ownerGuid: string): Promise<GameItem>
+	private updateSocketGames(game: GameItem)
+	{
+		const playerGuids = Object.keys(game.players);
+
+		// Get every socket that needs updating
+		const wsIds = playerGuids
+			.map(pg => this.wsClientPlayerMap[pg])
+			.reduce((acc, val) => acc.concat(val), []);
+
+		this.wss.clients.forEach(ws =>
+		{
+			if (wsIds.includes((ws as any).id))
+			{
+				ws.send(GameMessage.send(game));
+			}
+		});
+	}
+
+	public async createGame(ownerGuid: string, nickname: string): Promise<GameItem>
 	{
 		console.log(`Creating game for ${ownerGuid}`);
 
@@ -124,22 +185,30 @@ class _GameManager
 
 		try
 		{
-			await this.games.insertOne({
+			const initialGameItem: GameItem = {
 				id: gameId,
 				ownerGuid,
 				chooserGuid: null,
 				dateCreated: new Date(),
-				players: {},
+				players: {[ownerGuid]: this.createPlayer(ownerGuid, nickname, false)},
 				public: false,
+				started: false,
 				blackCard: -1,
 				roundCards: {},
 				usedBlackCards: [],
-				usedWhiteCards: []
-			});
+				usedWhiteCards: [],
+				revealIndex: 0
+			};
+
+			const gameItem = CardManager.nextBlackCard(initialGameItem);
+
+			await this.games.insertOne(gameItem);
 
 			const game = await this.getGame(gameId);
 
 			console.log(`Created game for ${ownerGuid}: ${game.id}`);
+
+			this.updateSocketGames(game);
 
 			return game;
 		}
@@ -161,28 +230,28 @@ class _GameManager
 		}
 
 		const newGame = {...existingGame};
-		newGame.players[playerGuid] = {
-			guid: playerGuid,
-			whiteCards: [],
-			nickname,
-			wins: 0,
-			isSpectating
-		};
+		newGame.players[playerGuid] = this.createPlayer(playerGuid, nickname, isSpectating);
 
 		await this.updateGame(newGame);
 
 		return newGame;
 	}
 
-	public async startGame(gameId: string)
+	public async startGame(gameId: string, ownerGuid: string)
 	{
 		const existingGame = await this.getGame(gameId);
+
+		if (existingGame.ownerGuid !== ownerGuid)
+		{
+			throw new Error("User cannot start game");
+		}
 
 		const newHands = await CardManager.dealWhiteCards(existingGame);
 		const newGame = {...existingGame};
 
 		const playerGuids = Object.keys(existingGame.players);
 		newGame.chooserGuid = playerGuids[playerGuids.length - 1];
+		newGame.started = true;
 
 		Object.keys(newGame.players).forEach(playerGuid =>
 		{
@@ -202,6 +271,18 @@ class _GameManager
 		newGame.players[playerGuid].whiteCards = newGame.players[playerGuid].whiteCards.filter(a => a !== cardId);
 		newGame.usedWhiteCards.push(cardId);
 		newGame.roundCards[playerGuid] = cardId;
+
+		await this.updateGame(newGame);
+
+		return newGame;
+	}
+
+	public async revealNext(gameId: string, playerGuid: string)
+	{
+		const existingGame = await this.getGame(gameId);
+
+		const newGame = {...existingGame};
+		newGame.revealIndex = newGame.revealIndex + 1;
 
 		await this.updateGame(newGame);
 
@@ -232,4 +313,4 @@ class _GameManager
 	}
 }
 
-export const GameManager = _GameManager.Instance;
+export const CreateGameManager = _GameManager.create;
