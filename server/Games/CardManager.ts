@@ -99,11 +99,11 @@ export class CardManager
 
 	public static getWhiteCard(cardId: number)
 	{
-		return this.whiteCards[cardId];
+		return this.whiteCards.find(c => c.id === cardId);
 	}
 
 	public static getBlackCard(cardId: number)
 	{
-		return this.blackCards[cardId];
+		return this.blackCards.find(c => c.id === cardId);
 	}
 }

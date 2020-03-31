@@ -5,6 +5,8 @@ import {Typography} from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import {Platform} from "../../../Global/Platform/platform";
+import {WhiteCard} from "../../../UI/WhiteCard";
+import Grid from "@material-ui/core/Grid";
 
 interface IShowWinnerProps
 {
@@ -58,8 +60,10 @@ export class ShowWinner extends React.Component<Props, State>
 	public render()
 	{
 		const game = this.state.gameData.game;
-		const winnerGuid = game?.lastWinnerGuid;
-		if (!winnerGuid || !game)
+		const lastWinner = game?.lastWinner;
+		const winnerCardId = lastWinner?.whiteCardId ?? 0;
+		const winnerCard = this.state.gameData.roundCardDefs?.[winnerCardId];
+		if (!lastWinner || !game || !winnerCard)
 		{
 			return null;
 		}
@@ -68,26 +72,37 @@ export class ShowWinner extends React.Component<Props, State>
 
 		const isChooser = game.chooserGuid === this.state.userData.playerGuid;
 
-		const winner = game.players[winnerGuid];
+		const winner = game.players[lastWinner.playerGuid];
 
 		return (
-			<div>
-				<Typography>
-					{winner?.nickname} won this round!
-				</Typography>
-				<div>
-					<Typography>Scoreboard:</Typography>
-					{playerGuids.map(pg => (
-						<Typography>
-							{game?.players[pg].nickname}: <strong>{game?.players[pg].wins}</strong>
-						</Typography>
-					))}
-				</div>
-				<Divider style={{margin: "1rem 0"}}/>
-				{isChooser && (
-					<Button color={"primary"} variant={"contained"} onClick={this.onClick}>Next round</Button>
-				)}
-			</div>
+			<>
+				<Grid item xs={12} sm={6}>
+					<div style={{display: "flex"}}>
+						<WhiteCard>
+							{winnerCard.response}
+						</WhiteCard>
+					</div>
+				</Grid>
+				<Grid item xs={12} sm={12}>
+					{isChooser && (
+						<div style={{marginBottom: "2rem", textAlign: "center"}}>
+							<Button size={"large"} color={"primary"} variant={"contained"} onClick={this.onClick}>Start Next round</Button>
+						</div>
+					)}
+					<Divider style={{margin: "1rem 0"}}/>
+					<Typography variant={"h4"}>
+						Winner: {winner?.nickname}!
+					</Typography>
+					<div>
+						<Typography>Scoreboard:</Typography>
+						{playerGuids.map(pg => (
+							<Typography>
+								{game?.players[pg].nickname}: <strong>{game?.players[pg].wins}</strong>
+							</Typography>
+						))}
+					</div>
+				</Grid>
+			</>
 		);
 	}
 }

@@ -7,6 +7,8 @@ import {Express} from "express";
 import * as http from "http";
 import {Config} from "../config/config";
 
+type PlayerMap = { [key: string]: GamePlayer };
+
 interface IWSMessage
 {
 	playerGuid: string;
@@ -25,19 +27,23 @@ export interface GameItem
 {
 	id: string;
 	roundIndex: number;
+	roundStarted: boolean;
 	ownerGuid: string;
 	chooserGuid: string | null;
 	started: boolean;
 	dateCreated: Date;
 	public: boolean;
-	players: { [key: string]: GamePlayer };
+	players: PlayerMap;
 	blackCard: number;
 	// key = player guid, value = white card ID
 	roundCards: { [key: string]: number };
 	usedBlackCards: number[];
 	usedWhiteCards: number[];
 	revealIndex: number;
-	lastWinnerGuid: string | undefined;
+	lastWinner: {
+		playerGuid: string;
+		whiteCardId: number;
+	} | undefined;
 }
 
 interface ICard
@@ -190,6 +196,7 @@ class _GameManager
 			const initialGameItem: GameItem = {
 				id: gameId,
 				roundIndex: 0,
+				roundStarted: false,
 				ownerGuid,
 				chooserGuid: null,
 				dateCreated: new Date(),
@@ -201,7 +208,7 @@ class _GameManager
 				usedBlackCards: [],
 				usedWhiteCards: [],
 				revealIndex: -1,
-				lastWinnerGuid: undefined
+				lastWinner: undefined
 			};
 
 			const gameItem = CardManager.nextBlackCard(initialGameItem);
@@ -251,23 +258,47 @@ class _GameManager
 		}
 
 		const newGame = {...existingGame};
-		newGame.lastWinnerGuid = undefined;
+
+		// Remove last winner
+		newGame.lastWinner = undefined;
+		// Reset white card reveal
 		newGame.revealIndex = -1;
-		newGame.roundCards = {};
+
+		newGame.roundStarted = false;
+
+		// Iterate the round index
 		newGame.roundIndex = existingGame.roundIndex + 1;
 
 		const playerGuids = Object.keys(existingGame.players);
+
+		// Grab a new chooser
 		const chooserIndex = newGame.roundIndex % playerGuids.length;
 		const chooser = playerGuids[chooserIndex];
-
 		newGame.chooserGuid = chooser;
 
+		// Remove the played white card from each player's hand
+		newGame.players = playerGuids.reduce((acc, playerGuid) => {
+			const player = existingGame.players[playerGuid];
+			const newPlayer = {...player};
+			const usedCard = existingGame.roundCards[playerGuid];
+			newPlayer.whiteCards = player.whiteCards.filter(wc => wc !== usedCard);
+			acc[playerGuid] = newPlayer;
+
+			return acc;
+		}, {} as PlayerMap);
+
+		// Reset the played cards for the round
+		newGame.roundCards = {};
+
+
+		// Deal a new hand
 		const newHands = await CardManager.dealWhiteCards(newGame);
 		Object.keys(newGame.players).forEach(playerGuid =>
 		{
 			newGame.players[playerGuid].whiteCards = newHands[playerGuid];
 		});
 
+		// Grab the new black card
 		const newGameWithBlackCard = CardManager.nextBlackCard(newGame);
 
 		await this.updateGame(newGameWithBlackCard);
@@ -318,8 +349,30 @@ class _GameManager
 	{
 		const existingGame = await this.getGame(gameId);
 
+		if (existingGame.chooserGuid !== playerGuid)
+		{
+			throw new Error("You are not the chooser!");
+		}
+
 		const newGame = {...existingGame};
 		newGame.revealIndex = newGame.revealIndex + 1;
+
+		await this.updateGame(newGame);
+
+		return newGame;
+	}
+
+	public async startRound(gameId: string, playerGuid: string)
+	{
+		const existingGame = await this.getGame(gameId);
+
+		if (existingGame.chooserGuid !== playerGuid)
+		{
+			throw new Error("You are not the chooser!");
+		}
+
+		const newGame = {...existingGame};
+		newGame.roundStarted = true;
 
 		await this.updateGame(newGame);
 
@@ -340,7 +393,10 @@ class _GameManager
 		if (winnerGuid)
 		{
 			newGame.players[winnerGuid].wins = newGame.players[winnerGuid].wins + 1;
-			newGame.lastWinnerGuid = winnerGuid;
+			newGame.lastWinner = {
+				playerGuid: winnerGuid,
+				whiteCardId
+			};
 
 			await this.updateGame(newGame);
 

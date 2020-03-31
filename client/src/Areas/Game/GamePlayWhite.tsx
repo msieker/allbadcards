@@ -1,7 +1,6 @@
 import * as React from "react";
 import {GameDataStore, IGameDataStorePayload} from "../../Global/DataStore/GameDataStore";
 import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
-import {IBlackCard, IWhiteCard, Platform} from "../../Global/Platform/platform";
 import {WhiteCard} from "../../UI/WhiteCard";
 import Grid from "@material-ui/core/Grid";
 import {BlackCard} from "../../UI/BlackCard";
@@ -24,7 +23,6 @@ type State = IGamePlayWhiteState;
 
 interface IGamePlayWhiteState
 {
-	hasSelected: boolean;
 	gameData: IGameDataStorePayload;
 	userData: IUserData;
 }
@@ -36,7 +34,6 @@ export class GamePlayWhite extends React.Component<Props, State>
 		super(props);
 
 		this.state = {
-			hasSelected: false,
 			gameData: GameDataStore.state,
 			userData: UserDataStore.state,
 		};
@@ -55,9 +52,11 @@ export class GamePlayWhite extends React.Component<Props, State>
 
 	private onSelect = (id: number) =>
 	{
-		this.setState({
-			hasSelected: true
-		});
+		const hasSelected = this.state.userData.playerGuid in (this.state.gameData.game?.roundCards ?? {});
+		if(hasSelected)
+		{
+			return;
+		}
 
 		GameDataStore.playWhiteCard(id, this.state.userData.playerGuid);
 	};
@@ -67,14 +66,19 @@ export class GamePlayWhite extends React.Component<Props, State>
 		const {
 			userData,
 			gameData,
-			hasSelected
 		} = this.state;
+
+		if (!gameData.game)
+		{
+			return null;
+		}
 
 		const {
 			players,
 			roundCards,
-			chooserGuid
-		} = gameData.game ?? {};
+			chooserGuid,
+			roundStarted
+		} = gameData.game;
 
 		const me = players?.[userData.playerGuid];
 
@@ -83,6 +87,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 			return null;
 		}
 
+		const hasSelected = userData.playerGuid in roundCards;
 		const whiteCards = Object.values(gameData.playerCardDefs);
 
 		const selectedCard = roundCards?.[me.guid];
@@ -100,29 +105,36 @@ export class GamePlayWhite extends React.Component<Props, State>
 		const chooser = players?.[chooserGuid!]?.nickname;
 
 		const waitingLabel = remainingPlayers.length === 0
-			? `Waiting for ${players?.[chooserGuid ?? ""]?.nickname} to pick the winner...`
+			? `Waiting for ${players?.[chooserGuid ?? ""]?.nickname} to pick the winner. You played:`
 			: `These players have not picked cards: ${remainingPlayers.join(", ")}`;
 
-		const hasWinner = !!gameData.game?.lastWinnerGuid;
+		const hasWinner = !!gameData.game?.lastWinner;
 
 		return (
 			<>
-				<Grid container spacing={2} style={{justifyContent: "center"}}>
-					<Grid item xs={12} sm={6}>
-						<BlackCard>
-							{gameData.blackCardDef?.prompt}
-						</BlackCard>
-					</Grid>
-					<RevealWhites canReveal={false}/>
-				</Grid>
-				<Divider style={{margin: "2rem 0"}}/>
 				<div>
 					<Typography>
 						Card Czar: <strong>{chooser}</strong>
 					</Typography>
 				</div>
+				<Divider style={{margin: "2rem 0"}}/>
+				<Grid container spacing={2} style={{justifyContent: "center"}}>
+					{roundStarted &&
+						<Grid item xs={12} sm={6}>
+							<BlackCard>
+								{gameData.blackCardDef?.prompt}
+							</BlackCard>
+						</Grid>
+					}
+					{!roundStarted &&
+						<Typography>Waiting for the round to start...</Typography>
+					}
+					<RevealWhites canReveal={false}/>
+					<ShowWinner/>
+				</Grid>
+				<Divider style={{margin: "2rem 0"}}/>
 				{!hasWinner && (
-					<div>
+					<div style={{marginBottom: "1rem"}}>
 						<Typography>
 							{waitingLabel}
 						</Typography>
@@ -131,8 +143,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 				{selectedLoading && (
 					<ContainerProgress/>
 				)}
-				<ShowWinner/>
-				{!hasWinner && (
+				{!hasWinner && roundStarted && (
 					<Grid container spacing={2}>
 						{renderedWhiteCards.map(card => (
 							<Grid item xs={12} sm={6}>

@@ -73,8 +73,8 @@ const GamePreview: React.FC<IGamePreviewProps> = (props) =>
 							<ListItemText>
 								{player.nickname}
 								{player.guid === gameData.game?.ownerGuid && <>
-									<span> (Owner)</span>
-								</>}
+                                    <span> (Owner)</span>
+                                </>}
 							</ListItemText>
 						</ListItem>
 						<Divider/>

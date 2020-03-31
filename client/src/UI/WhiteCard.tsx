@@ -52,14 +52,14 @@ export class WhiteCard extends React.Component<Props, State>
 
 		return (
 			<Card
-				style={{height: "33vh", minHeight: "20rem", cursor: "pointer"}}
+				style={{minHeight: "33vh", cursor: "pointer"}}
 				elevation={this.state.elevation}
 				onMouseEnter={this.onMouseEnter}
 				onMouseLeave={this.onMouseLeave}
 				onClick={onSelect}
 			>
 				<CardContent>
-					<Typography variant={"h4"}>
+					<Typography variant={"h5"}>
 						{children}
 					</Typography>
 				</CardContent>

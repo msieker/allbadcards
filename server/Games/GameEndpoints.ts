@@ -13,14 +13,14 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 
 	app.get("/api/game/get-white-card", async (req, res) => {
 		console.log(req.url, req.query);
-		const card = CardManager.getWhiteCard(req.query.cardId);
+		const card = CardManager.getWhiteCard(parseInt(req.query.cardId));
 
 		res.send(card);
 	});
 
 	app.get("/api/game/get-black-card", async (req, res) => {
 		console.log(req.url, req.query);
-		const card = CardManager.getBlackCard(req.query.cardId);
+		const card = CardManager.getBlackCard(parseInt(req.query.cardId));
 
 		res.send(card);
 	});
@@ -63,6 +63,13 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 	app.post("/api/game/reveal-next", async (req, res) => {
 		console.log(req.url, req.body);
 		const result = await GameManager.revealNext(req.body.gameId, req.body.ownerGuid);
+
+		res.send(result);
+	});
+
+	app.post("/api/game/start-round", async (req, res) => {
+		console.log(req.url, req.body);
+		const result = await GameManager.startRound(req.body.gameId, req.body.ownerGuid);
 
 		res.send(result);
 	});

@@ -9,6 +9,7 @@ import {Typography} from "@material-ui/core";
 import {WhiteCard} from "../../UI/WhiteCard";
 import {RevealWhites} from "./Components/RevealWhites";
 import {ShowWinner} from "./Components/ShowWinner";
+import Button from "@material-ui/core/Button";
 
 interface IGamePlayBlackProps
 {
@@ -55,9 +56,9 @@ export class GamePlayBlack extends React.Component<Props, State>
 		GameDataStore.chooseWinner(cardId, this.state.userData.playerGuid);
 	};
 
-	private onReveal = () =>
+	private onClickStartRound = () =>
 	{
-		GameDataStore.revealNext(this.state.userData.playerGuid);
+		GameDataStore.startRound(this.state.userData.playerGuid);
 	};
 
 	public render()
@@ -70,7 +71,8 @@ export class GamePlayBlack extends React.Component<Props, State>
 		const {
 			players,
 			chooserGuid,
-			roundCards
+			roundCards,
+			roundStarted
 		} = gameData.game ?? {};
 
 		const me = players?.[this.state.userData.playerGuid];
@@ -99,10 +101,16 @@ export class GamePlayBlack extends React.Component<Props, State>
 				? `Reveal each white card...`
 				: `Waiting for: ${remainingPlayers.join(", ")}`;
 
-		const hasWinner = !!gameData.game?.lastWinnerGuid;
+		const hasWinner = !!gameData.game?.lastWinner;
 
 		return (
 			<>
+				<div>
+					<Typography>
+						Card Czar: <strong>{chooser}</strong>
+					</Typography>
+				</div>
+				<Divider style={{margin: "2rem 0"}}/>
 				<Grid container spacing={2} style={{justifyContent: "center"}}>
 					<Grid item xs={12} sm={6}>
 						<BlackCard>
@@ -110,13 +118,16 @@ export class GamePlayBlack extends React.Component<Props, State>
 						</BlackCard>
 					</Grid>
 					<RevealWhites canReveal={true}/>
+					<ShowWinner/>
 				</Grid>
+				{!roundStarted && (
+					<div style={{marginTop: "1rem", textAlign: "center"}}>
+						<Button color={"primary"} variant={"contained"} onClick={this.onClickStartRound}>
+							Start the round!
+						</Button>
+					</div>
+				)}
 				<Divider style={{margin: "2rem 0"}}/>
-				<div>
-					<Typography>
-						Card Czar: <strong>{chooser}</strong>
-					</Typography>
-				</div>
 				{!hasWinner && (
 					<div>
 						<Typography variant={"h5"} style={{margin: "1rem 0"}}>
@@ -124,7 +135,6 @@ export class GamePlayBlack extends React.Component<Props, State>
 						</Typography>
 					</div>
 				)}
-				<ShowWinner/>
 				{timeToPick && !revealMode && !hasWinner && (
 					<Grid container spacing={2}>
 						{whiteCards.map(card => (

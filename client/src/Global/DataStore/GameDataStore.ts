@@ -3,7 +3,7 @@ import {GameItem, IBlackCard, IWhiteCard, Platform} from "../Platform/platform";
 import {UserDataStore} from "./UserDataStore";
 import deepEqual from "deep-equal";
 
-export type WhiteCardMap = { [cardId: string]: IWhiteCard };
+export type WhiteCardMap = { [cardId: number]: IWhiteCard };
 
 export interface IGameDataStorePayload
 {
@@ -173,6 +173,17 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 		}
 
 		Platform.revealNext(this.state.game.id, userGuid)
+			.catch(e => console.error(e));
+	}
+
+	public startRound(userGuid: string)
+	{
+		if (!this.state.game)
+		{
+			throw new Error("Invalid card or game!");
+		}
+
+		Platform.startRound(this.state.game.id, userGuid)
 			.catch(e => console.error(e));
 	}
 }
