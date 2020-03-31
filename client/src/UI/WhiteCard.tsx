@@ -52,7 +52,7 @@ export class WhiteCard extends React.Component<Props, State>
 
 		return (
 			<Card
-				style={{height: "33vh", minHeight: "20rem"}}
+				style={{height: "33vh", minHeight: "20rem", cursor: "pointer"}}
 				elevation={this.state.elevation}
 				onMouseEnter={this.onMouseEnter}
 				onMouseLeave={this.onMouseLeave}

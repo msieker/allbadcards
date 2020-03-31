@@ -27,7 +27,7 @@ export class CardManager
 	{
 		const blackCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/prompts.json"), "utf8");
 		const whiteCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/responses.json"), "utf8");
-		this.blackCards = JSON.parse(blackCardsFile);
+		this.blackCards = (JSON.parse(blackCardsFile) as IBlackCard[]).filter(c => c.special === "");
 		this.whiteCards = JSON.parse(whiteCardsFile);
 	}
 
@@ -60,9 +60,21 @@ export class CardManager
 
 	public static async dealWhiteCards(gameItem: GameItem)
 	{
+		const newGame = {...gameItem};
+
 		let usedWhiteCards = [...gameItem.usedWhiteCards];
 
-		const newHands = Object.keys(gameItem.players)
+		const playerKeys = Object.keys(gameItem.players);
+
+		const availableCardRemainingCount = this.whiteCards.length - usedWhiteCards.length;
+
+		// If we run out of white cards, reset them
+		if(availableCardRemainingCount < playerKeys.length)
+		{
+			usedWhiteCards = [];
+		}
+
+		const newHands = playerKeys
 			.reduce((hands, playerGuid) =>
 			{
 				hands[playerGuid] = gameItem.players[playerGuid].whiteCards;
@@ -78,7 +90,6 @@ export class CardManager
 				return hands;
 			}, {} as { [key: string]: number[] });
 
-		const newGame = {...gameItem};
 		newGame.usedWhiteCards = usedWhiteCards;
 
 		await GameManager.updateGame(newGame);

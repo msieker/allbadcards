@@ -75,11 +75,11 @@ class Game extends React.Component<RouteComponentProps<IGameParams>, IGameState>
 				)}
 
 				{started && !isChooser && (
-					<GamePlayWhite gameData={this.state.gameData} userData={this.state.userData} />
+					<GamePlayWhite />
 				)}
 
 				{started && isChooser && (
-					<GamePlayBlack gameData={this.state.gameData} userData={this.state.userData} />
+					<GamePlayBlack />
 				)}
 			</>
 		);

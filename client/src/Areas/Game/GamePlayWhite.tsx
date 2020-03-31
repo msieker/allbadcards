@@ -8,11 +8,11 @@ import {BlackCard} from "../../UI/BlackCard";
 import Divider from "@material-ui/core/Divider";
 import {ContainerProgress} from "../../UI/ContainerProgress";
 import {Typography} from "@material-ui/core";
+import {RevealWhites} from "./Components/RevealWhites";
+import {ShowWinner} from "./Components/ShowWinner";
 
 interface IGamePlayWhiteProps
 {
-	gameData: IGameDataStorePayload;
-	userData: IUserData;
 }
 
 interface DefaultProps
@@ -22,13 +22,11 @@ interface DefaultProps
 type Props = IGamePlayWhiteProps & DefaultProps;
 type State = IGamePlayWhiteState;
 
-type WhiteCardMap = { [cardId: string]: IWhiteCard };
-
 interface IGamePlayWhiteState
 {
-	whiteCards: WhiteCardMap;
-	blackCard: IBlackCard | undefined;
 	hasSelected: boolean;
+	gameData: IGameDataStorePayload;
+	userData: IUserData;
 }
 
 export class GamePlayWhite extends React.Component<Props, State>
@@ -38,84 +36,21 @@ export class GamePlayWhite extends React.Component<Props, State>
 		super(props);
 
 		this.state = {
-			whiteCards: {},
-			blackCard: undefined,
-			hasSelected: false
+			hasSelected: false,
+			gameData: GameDataStore.state,
+			userData: UserDataStore.state,
 		};
 	}
 
 	public componentDidMount(): void
 	{
-		const {
-			playerGuid
-		} = this.props.userData;
+		GameDataStore.listen(data => this.setState({
+			gameData: data
+		}));
 
-		const {
-			blackCard,
-			players
-		} = this.props.gameData.game ?? {};
-
-		const me = players?.[playerGuid];
-
-		this.loadCards(
-			blackCard,
-			me?.whiteCards ?? []
-		);
-	}
-
-	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void
-	{
-		const {
-			playerGuid
-		} = this.props.userData;
-
-		const {
-			blackCard,
-			players
-		} = this.props.gameData.game ?? {};
-
-		const oldPlayers = prevProps.gameData.game?.players ?? {};
-
-		const me = players?.[playerGuid];
-		const oldMe = oldPlayers?.[playerGuid];
-		const newCards = me?.whiteCards.filter(c => !oldMe.whiteCards.includes(c));
-		const newCardCount = newCards?.length ?? 0;
-
-		if (newCardCount > 0)
-		{
-			this.loadCards(
-				blackCard,
-				me?.whiteCards ?? []
-			);
-		}
-	}
-
-	private loadCards(blackCard: number | undefined, whiteCards: number[])
-	{
-		if (blackCard)
-		{
-			Platform.getBlackCard(blackCard)
-				.then(card =>
-				{
-					this.setState({
-						blackCard: card
-					});
-				});
-		}
-
-		Platform.getWhiteCards(whiteCards)
-			.then(cards =>
-			{
-				const fixedCards = cards.reduce((all, item) =>
-				{
-					all[item.id] = item;
-					return all;
-				}, {} as WhiteCardMap);
-
-				this.setState({
-					whiteCards: fixedCards
-				});
-			});
+		UserDataStore.listen(data => this.setState({
+			userData: data
+		}));
 	}
 
 	private onSelect = (id: number) =>
@@ -124,26 +59,31 @@ export class GamePlayWhite extends React.Component<Props, State>
 			hasSelected: true
 		});
 
-		GameDataStore.playWhiteCard(id, this.props.userData.playerGuid);
+		GameDataStore.playWhiteCard(id, this.state.userData.playerGuid);
 	};
 
 	public render()
 	{
 		const {
+			userData,
+			gameData,
+			hasSelected
+		} = this.state;
+
+		const {
 			players,
 			roundCards,
 			chooserGuid
-		} = this.props.gameData.game ?? {};
+		} = gameData.game ?? {};
 
-		const me = players?.[this.props.userData.playerGuid];
+		const me = players?.[userData.playerGuid];
 
 		if (!me)
 		{
 			return null;
 		}
 
-		const whiteCards = Object.keys(this.state.whiteCards)
-			.map(cardId => this.state.whiteCards[cardId]);
+		const whiteCards = Object.values(gameData.playerCardDefs);
 
 		const selectedCard = roundCards?.[me.guid];
 
@@ -151,7 +91,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 			? whiteCards.filter(c => c.id === selectedCard)
 			: whiteCards;
 
-		const selectedLoading = this.state.hasSelected && !selectedCard;
+		const selectedLoading = hasSelected && !selectedCard;
 
 		const remainingPlayerGuids = Object.keys(players ?? {})
 			.filter(pg => !(pg in (roundCards ?? {})) && pg !== chooserGuid);
@@ -161,40 +101,48 @@ export class GamePlayWhite extends React.Component<Props, State>
 
 		const waitingLabel = remainingPlayers.length === 0
 			? `Waiting for ${players?.[chooserGuid ?? ""]?.nickname} to pick the winner...`
-			: `Waiting for: ${remainingPlayers.join(", ")}`;
+			: `These players have not picked cards: ${remainingPlayers.join(", ")}`;
+
+		const hasWinner = !!gameData.game?.lastWinnerGuid;
 
 		return (
 			<>
 				<Grid container spacing={2} style={{justifyContent: "center"}}>
 					<Grid item xs={12} sm={6}>
 						<BlackCard>
-							{this.state.blackCard?.prompt}
+							{gameData.blackCardDef?.prompt}
 						</BlackCard>
 					</Grid>
+					<RevealWhites canReveal={false}/>
 				</Grid>
 				<Divider style={{margin: "2rem 0"}}/>
 				<div>
 					<Typography>
-						Black Card: {chooser}
+						Card Czar: <strong>{chooser}</strong>
 					</Typography>
 				</div>
-				<div>
-					<Typography>
-						{waitingLabel}
-					</Typography>
-				</div>
+				{!hasWinner && (
+					<div>
+						<Typography>
+							{waitingLabel}
+						</Typography>
+					</div>
+				)}
 				{selectedLoading && (
 					<ContainerProgress/>
 				)}
-				<Grid container spacing={2}>
-					{renderedWhiteCards.map(card => (
-						<Grid item xs={12} sm={6}>
-							<WhiteCard key={card.id} onSelect={() => this.onSelect(card.id)}>
-								{card.response}
-							</WhiteCard>
-						</Grid>
-					))}
-				</Grid>
+				<ShowWinner/>
+				{!hasWinner && (
+					<Grid container spacing={2}>
+						{renderedWhiteCards.map(card => (
+							<Grid item xs={12} sm={6}>
+								<WhiteCard key={card.id} onSelect={() => this.onSelect(card.id)}>
+									{card.response}
+								</WhiteCard>
+							</Grid>
+						))}
+					</Grid>
+				)}
 			</>
 		);
 	}

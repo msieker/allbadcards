@@ -79,3 +79,8 @@ declare module "react-copy-to-clipboard"
 {
 	export const CopyToClipboard: React.ComponentClass<any>;
 }
+
+declare module "deep-equal"
+{
+	export default (a: any, b: any, opts?: any) => boolean;
+}

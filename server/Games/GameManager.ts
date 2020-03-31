@@ -24,6 +24,7 @@ export interface GamePlayer
 export interface GameItem
 {
 	id: string;
+	roundIndex: number;
 	ownerGuid: string;
 	chooserGuid: string | null;
 	started: boolean;
@@ -36,6 +37,7 @@ export interface GameItem
 	usedBlackCards: number[];
 	usedWhiteCards: number[];
 	revealIndex: number;
+	lastWinnerGuid: string | undefined;
 }
 
 interface ICard
@@ -187,6 +189,7 @@ class _GameManager
 		{
 			const initialGameItem: GameItem = {
 				id: gameId,
+				roundIndex: 0,
 				ownerGuid,
 				chooserGuid: null,
 				dateCreated: new Date(),
@@ -197,7 +200,8 @@ class _GameManager
 				roundCards: {},
 				usedBlackCards: [],
 				usedWhiteCards: [],
-				revealIndex: 0
+				revealIndex: -1,
+				lastWinnerGuid: undefined
 			};
 
 			const gameItem = CardManager.nextBlackCard(initialGameItem);
@@ -237,6 +241,40 @@ class _GameManager
 		return newGame;
 	}
 
+	public async nextRound(gameId: string, chooserGuid: string)
+	{
+		const existingGame = await this.getGame(gameId);
+
+		if (existingGame.chooserGuid !== chooserGuid)
+		{
+			throw new Error("You are not the chooser!");
+		}
+
+		const newGame = {...existingGame};
+		newGame.lastWinnerGuid = undefined;
+		newGame.revealIndex = -1;
+		newGame.roundCards = {};
+		newGame.roundIndex = existingGame.roundIndex + 1;
+
+		const playerGuids = Object.keys(existingGame.players);
+		const chooserIndex = newGame.roundIndex % playerGuids.length;
+		const chooser = playerGuids[chooserIndex];
+
+		newGame.chooserGuid = chooser;
+
+		const newHands = await CardManager.dealWhiteCards(newGame);
+		Object.keys(newGame.players).forEach(playerGuid =>
+		{
+			newGame.players[playerGuid].whiteCards = newHands[playerGuid];
+		});
+
+		const newGameWithBlackCard = CardManager.nextBlackCard(newGame);
+
+		await this.updateGame(newGameWithBlackCard);
+
+		return newGame;
+	}
+
 	public async startGame(gameId: string, ownerGuid: string)
 	{
 		const existingGame = await this.getGame(gameId);
@@ -250,7 +288,7 @@ class _GameManager
 		const newGame = {...existingGame};
 
 		const playerGuids = Object.keys(existingGame.players);
-		newGame.chooserGuid = playerGuids[playerGuids.length - 1];
+		newGame.chooserGuid = playerGuids[0];
 		newGame.started = true;
 
 		Object.keys(newGame.players).forEach(playerGuid =>
@@ -268,7 +306,6 @@ class _GameManager
 		const existingGame = await this.getGame(gameId);
 
 		const newGame = {...existingGame};
-		newGame.players[playerGuid].whiteCards = newGame.players[playerGuid].whiteCards.filter(a => a !== cardId);
 		newGame.usedWhiteCards.push(cardId);
 		newGame.roundCards[playerGuid] = cardId;
 
@@ -303,6 +340,7 @@ class _GameManager
 		if (winnerGuid)
 		{
 			newGame.players[winnerGuid].wins = newGame.players[winnerGuid].wins + 1;
+			newGame.lastWinnerGuid = winnerGuid;
 
 			await this.updateGame(newGame);
 

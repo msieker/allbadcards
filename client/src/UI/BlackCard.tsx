@@ -50,6 +50,7 @@ export class BlackCard extends React.Component<Props, State>
 			<Card
 				style={{
 					height: "33vh",
+					cursor: "default",
 					minHeight: "20rem",
 					backgroundColor: "black",
 				}}

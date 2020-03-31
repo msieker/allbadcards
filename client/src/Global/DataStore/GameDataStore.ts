@@ -1,16 +1,25 @@
 import {DataStore} from "./DataStore";
-import {GameItem, Platform} from "../Platform/platform";
+import {GameItem, IBlackCard, IWhiteCard, Platform} from "../Platform/platform";
 import {UserDataStore} from "./UserDataStore";
+import deepEqual from "deep-equal";
+
+export type WhiteCardMap = { [cardId: string]: IWhiteCard };
 
 export interface IGameDataStorePayload
 {
 	game: GameItem | null;
+	roundCardDefs: WhiteCardMap;
+	playerCardDefs: WhiteCardMap;
+	blackCardDef: IBlackCard | null;
 }
 
 class _GameDataStore extends DataStore<IGameDataStorePayload>
 {
 	public static Instance = new _GameDataStore({
-		game: null
+		game: null,
+		roundCardDefs: {},
+		playerCardDefs: {},
+		blackCardDef: null
 	});
 
 	private ws: WebSocket | null = null;
@@ -34,8 +43,92 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 		};
 	}
 
+	protected update(data: Partial<IGameDataStorePayload>)
+	{
+		let prev = {...this.state};
+
+		super.update(data);
+
+		console.groupCollapsed("[GameDataStore] Update...");
+		console.log("New: ", data);
+		console.log("Prev: ", prev);
+		console.log("Result:", this.state);
+		console.groupEnd();
+
+		const meGuid = UserDataStore.state.playerGuid;
+
+		if (!deepEqual(prev.game?.roundCards, this.state.game?.roundCards))
+		{
+			this.loadRoundCards();
+		}
+
+		if (!deepEqual(prev.game?.players[meGuid], this.state.game?.players[meGuid]))
+		{
+			this.loadPlayerCards(meGuid);
+		}
+
+		if(prev.game?.blackCard !== this.state.game?.blackCard)
+		{
+			this.loadBlackCard();
+		}
+	}
+
+	private loadRoundCards()
+	{
+		const toLoad = this.state.game?.roundCards;
+		if(!toLoad)
+		{
+			return;
+		}
+
+		const cardIds = Object.values(toLoad);
+
+		this.loadWhiteCardMap(cardIds)
+			.then(roundCardDefs => this.update({
+				roundCardDefs
+			}));
+	}
+
+	private loadPlayerCards(playerGuid: string)
+	{
+		const toLoad = this.state.game?.players[playerGuid].whiteCards;
+		if(!toLoad)
+		{
+			return;
+		}
+
+		const cardIds = Object.values(toLoad);
+
+		this.loadWhiteCardMap(cardIds)
+			.then(playerCardDefs => this.update({
+				playerCardDefs
+			}));
+	}
+
+	private loadBlackCard()
+	{
+		Platform.getBlackCard(this.state.game?.blackCard!)
+			.then(blackCardDef => this.update({
+				blackCardDef
+			}));
+	}
+
+	private async loadWhiteCardMap(cardIds: number[]): Promise<WhiteCardMap>
+	{
+		const data = await Platform.getWhiteCards(cardIds);
+		const map = data.reduce((acc, item) =>
+		{
+			acc[item.id] = item;
+			return acc;
+		}, {} as WhiteCardMap);
+
+		return map;
+	}
+
 	public hydrate(gameId: string)
 	{
+		console.log("[GameDataStore] Hydrating...", gameId);
+
 		Platform.getGame(gameId)
 			.then(data =>
 			{
@@ -48,6 +141,8 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 
 	public playWhiteCard(cardId: number | undefined, userGuid: string)
 	{
+		console.log("[GameDataStore] Played white card...", cardId, userGuid);
+
 		if (!this.state.game || !cardId)
 		{
 			throw new Error("Invalid card or game!");
@@ -59,6 +154,8 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 
 	public chooseWinner(cardId: number | undefined, userGuid: string)
 	{
+		console.log("[GameDataStore] Choosing winner...", cardId, userGuid);
+
 		if (!this.state.game || !cardId)
 		{
 			throw new Error("Invalid card or game!");

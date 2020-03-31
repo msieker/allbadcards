@@ -27,6 +27,7 @@ export interface GameItem
 	usedBlackCards: number[];
 	usedWhiteCards: number[];
 	revealIndex: number;
+	lastWinnerGuid: string | undefined;
 }
 
 export interface ICard
@@ -121,6 +122,14 @@ class _Platform
 		return _Platform.doPost<GameItem>("/api/game/reveal-next", {
 			gameId,
 			ownerGuid,
+		});
+	}
+
+	public async nextRound(gameId: string, playerGuid: string)
+	{
+		return _Platform.doPost<GameItem>("/api/game/next-round", {
+			gameId,
+			playerGuid,
 		});
 	}
 
