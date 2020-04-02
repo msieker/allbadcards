@@ -3,7 +3,6 @@ import {GameDataStore, IGameDataStorePayload} from "../../Global/DataStore/GameD
 import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
 import Grid from "@material-ui/core/Grid";
 import {BlackCard} from "../../UI/BlackCard";
-import {IWhiteCard} from "../../Global/Platform/platform";
 import Divider from "@material-ui/core/Divider";
 import {Typography} from "@material-ui/core";
 import {WhiteCard} from "../../UI/WhiteCard";
@@ -51,9 +50,9 @@ export class GamePlayBlack extends React.Component<Props, State>
 		}));
 	}
 
-	private onSelect = (cardId: number) =>
+	private onSelect = (winningPlayerGuid: string) =>
 	{
-		GameDataStore.chooseWinner(cardId, this.state.userData.playerGuid);
+		GameDataStore.chooseWinner(this.state.userData.playerGuid, winningPlayerGuid);
 	};
 
 	private onClickStartRound = () =>
@@ -68,38 +67,42 @@ export class GamePlayBlack extends React.Component<Props, State>
 			userData
 		} = this.state;
 
+		const me = gameData.game?.players?.[this.state.userData.playerGuid];
+
+		const cardDefsLoaded = Object.values(gameData.game?.roundCards ?? {}).length === 0 || Object.keys(gameData.roundCardDefs).length > 0;
+
+		if (!me || !gameData.game || !cardDefsLoaded)
+		{
+			return null;
+		}
+
 		const {
 			players,
 			chooserGuid,
 			roundCards,
 			roundStarted
-		} = gameData.game ?? {};
+		} = gameData.game;
 
-		const me = players?.[this.state.userData.playerGuid];
-
-		if (!me)
-		{
-			return null;
-		}
-
-		const whiteCards = Object.values(gameData.roundCardDefs);
+		const roundCardKeys = Object.keys(roundCards ?? {});
+		const roundCardValues = roundCardKeys
+			.map(playerGuid => roundCards[playerGuid]
+				.map(cardId => gameData.roundCardDefs[cardId]));
 
 		const remainingPlayerGuids = Object.keys(players ?? {})
 			.filter(pg => !(pg in (roundCards ?? {})) && pg !== chooserGuid);
 
 		const remainingPlayers = remainingPlayerGuids.map(pg => players?.[pg]?.nickname);
-		const chooser = players?.[chooserGuid!]?.nickname;
 
 		const revealedIndex = this.state.gameData.game?.revealIndex ?? 0;
 		const timeToPick = remainingPlayers.length === 0;
-		const revealMode = timeToPick && revealedIndex < whiteCards.length;
-		const revealFinished = revealedIndex === whiteCards.length;
+		const revealMode = timeToPick && revealedIndex < roundCardKeys.length;
+		const revealFinished = revealedIndex === roundCardKeys.length;
 
 		const waitingLabel = revealFinished
-			? "Pick the winner:"
+			? "Pick the winner"
 			: timeToPick
 				? `Reveal each white card...`
-				: `Waiting for: ${remainingPlayers.join(", ")}`;
+				: `Picking: ${remainingPlayers.join(", ")}`;
 
 		const hasWinner = !!gameData.game?.lastWinner;
 
@@ -107,10 +110,17 @@ export class GamePlayBlack extends React.Component<Props, State>
 			<>
 				<div>
 					<Typography>
-						Card Czar: <strong>{chooser}</strong>
+						Card Czar: <strong>You!</strong>
 					</Typography>
+					{!hasWinner && (
+						<div>
+							<Typography variant={"h5"}>
+								{waitingLabel}
+							</Typography>
+						</div>
+					)}
 				</div>
-				<Divider style={{margin: "2rem 0"}}/>
+				<Divider style={{margin: "1rem 0"}}/>
 				<Grid container spacing={2} style={{justifyContent: "center"}}>
 					<Grid item xs={12} sm={6}>
 						<BlackCard>
@@ -127,20 +137,26 @@ export class GamePlayBlack extends React.Component<Props, State>
 						</Button>
 					</div>
 				)}
-				<Divider style={{margin: "2rem 0"}}/>
-				{!hasWinner && (
-					<div>
-						<Typography variant={"h5"} style={{margin: "1rem 0"}}>
-							{waitingLabel}
-						</Typography>
-					</div>
-				)}
+				<Divider style={{margin: "1rem 0"}}/>
 				{timeToPick && !revealMode && !hasWinner && (
 					<Grid container spacing={2}>
-						{whiteCards.map(card => (
+						{roundCardKeys.map((playerGuid, i) => (
 							<Grid item xs={12} sm={6}>
-								<WhiteCard key={card.id} onSelect={() => this.onSelect(card.id)}>
-									{card.response}
+								<WhiteCard actions={(
+									<Button
+										variant={"contained"}
+										color={"primary"}
+										onClick={() => this.onSelect(playerGuid)}
+									>
+										Pick Winner
+									</Button>
+								)}>
+									{roundCardValues[i].map(card => (
+										<>
+											<div>{card.response}</div>
+											<Divider style={{margin: "1rem 0"}}/>
+										</>
+									))}
 								</WhiteCard>
 							</Grid>
 						))}

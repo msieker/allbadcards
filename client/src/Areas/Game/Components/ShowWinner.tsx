@@ -61,9 +61,9 @@ export class ShowWinner extends React.Component<Props, State>
 	{
 		const game = this.state.gameData.game;
 		const lastWinner = game?.lastWinner;
-		const winnerCardId = lastWinner?.whiteCardId ?? 0;
-		const winnerCard = this.state.gameData.roundCardDefs?.[winnerCardId];
-		if (!lastWinner || !game || !winnerCard)
+		const winnerCardIds = lastWinner?.whiteCardIds ?? [];
+		const winnerCards = winnerCardIds.map(cardId => this.state.gameData.roundCardDefs?.[cardId]);
+		if (!lastWinner || !game || winnerCards.length === 0)
 		{
 			return null;
 		}
@@ -77,16 +77,21 @@ export class ShowWinner extends React.Component<Props, State>
 		return (
 			<>
 				<Grid item xs={12} sm={6}>
-					<div style={{display: "flex"}}>
-						<WhiteCard>
-							{winnerCard.response}
-						</WhiteCard>
-					</div>
+					<WhiteCard style={{marginBottom: "0.5rem"}}>
+						{winnerCards.map(card => (
+							<>
+								<div>{card.response}</div>
+								<Divider/>
+							</>
+						))}
+					</WhiteCard>
 				</Grid>
 				<Grid item xs={12} sm={12}>
 					{isChooser && (
 						<div style={{marginBottom: "2rem", textAlign: "center"}}>
-							<Button size={"large"} color={"primary"} variant={"contained"} onClick={this.onClick}>Start Next round</Button>
+							<Button size={"large"} color={"primary"} variant={"contained"} onClick={this.onClick}>
+								Start Next round
+							</Button>
 						</div>
 					)}
 					<Divider style={{margin: "1rem 0"}}/>

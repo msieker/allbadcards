@@ -3,7 +3,6 @@ import shortid from "shortid";
 import {CardManager} from "./CardManager";
 import WebSocket from "ws";
 import {GameMessage} from "../SocketMessages/GameMessage";
-import {Express} from "express";
 import * as http from "http";
 import {Config} from "../config/config";
 
@@ -36,13 +35,13 @@ export interface GameItem
 	players: PlayerMap;
 	blackCard: number;
 	// key = player guid, value = white card ID
-	roundCards: { [key: string]: number };
+	roundCards: { [key: string]: number[] };
 	usedBlackCards: number[];
 	usedWhiteCards: number[];
 	revealIndex: number;
 	lastWinner: {
 		playerGuid: string;
-		whiteCardId: number;
+		whiteCardIds: number[];
 	} | undefined;
 }
 
@@ -97,11 +96,12 @@ class _GameManager
 					this.wsClientPlayerMap[data.playerGuid] = [id, ...existingConnections];
 				});
 
-				ws.on("close", () => {
+				ws.on("close", () =>
+				{
 					const matchingPlayerGuid = Object.keys(this.wsClientPlayerMap)
 						.find(playerGuid => this.wsClientPlayerMap[playerGuid].includes(id));
 
-					if(matchingPlayerGuid)
+					if (matchingPlayerGuid)
 					{
 						const existingConnections = this.wsClientPlayerMap[matchingPlayerGuid];
 						this.wsClientPlayerMap[matchingPlayerGuid] = existingConnections.filter(a => a !== id);
@@ -243,6 +243,39 @@ class _GameManager
 		const newGame = {...existingGame};
 		newGame.players[playerGuid] = this.createPlayer(playerGuid, nickname, isSpectating);
 
+		// If the game already started, deal in this new person
+		if(newGame.started)
+		{
+			const newHands = await CardManager.dealWhiteCards(newGame);
+			Object.keys(newGame.players).forEach(playerGuid =>
+			{
+				newGame.players[playerGuid].whiteCards = newHands[playerGuid];
+			});
+		}
+
+		await this.updateGame(newGame);
+
+		return newGame;
+	}
+
+	public async kickPlayer(gameId: string, targetGuid: string, ownerGuid: string)
+	{
+		const existingGame = await this.getGame(gameId);
+
+		if (existingGame.ownerGuid !== ownerGuid)
+		{
+			throw new Error("You are not the owner!");
+		}
+
+		const newGame = {...existingGame};
+		delete newGame.players[targetGuid];
+
+		// If the owner deletes themselves, pick a new owner
+		if(targetGuid === ownerGuid)
+		{
+			newGame.ownerGuid = Object.keys(newGame.players)[0];
+		}
+
 		await this.updateGame(newGame);
 
 		return newGame;
@@ -277,11 +310,12 @@ class _GameManager
 		newGame.chooserGuid = chooser;
 
 		// Remove the played white card from each player's hand
-		newGame.players = playerGuids.reduce((acc, playerGuid) => {
+		newGame.players = playerGuids.reduce((acc, playerGuid) =>
+		{
 			const player = existingGame.players[playerGuid];
 			const newPlayer = {...player};
-			const usedCard = existingGame.roundCards[playerGuid];
-			newPlayer.whiteCards = player.whiteCards.filter(wc => wc !== usedCard);
+			const usedCards = existingGame.roundCards[playerGuid] ?? [];
+			newPlayer.whiteCards = player.whiteCards.filter(wc => usedCards.includes(wc));
 			acc[playerGuid] = newPlayer;
 
 			return acc;
@@ -332,13 +366,13 @@ class _GameManager
 		return newGame;
 	}
 
-	public async playCard(gameId: string, playerGuid: string, cardId: number)
+	public async playCard(gameId: string, playerGuid: string, cardIds: number[])
 	{
 		const existingGame = await this.getGame(gameId);
 
 		const newGame = {...existingGame};
-		newGame.usedWhiteCards.push(cardId);
-		newGame.roundCards[playerGuid] = cardId;
+		newGame.usedWhiteCards.push(...cardIds);
+		newGame.roundCards[playerGuid] = cardIds;
 
 		await this.updateGame(newGame);
 
@@ -379,7 +413,7 @@ class _GameManager
 		return newGame;
 	}
 
-	public async selectWinnerCard(gameId: string, playerGuid: string, whiteCardId: number)
+	public async selectWinnerCard(gameId: string, playerGuid: string, winnerPlayerGuid: string)
 	{
 		const existingGame = await this.getGame(gameId);
 
@@ -389,21 +423,16 @@ class _GameManager
 		}
 
 		const newGame = {...existingGame};
-		const winnerGuid = Object.values(newGame.players).find(p => p.whiteCards.includes(whiteCardId))?.guid;
-		if (winnerGuid)
-		{
-			newGame.players[winnerGuid].wins = newGame.players[winnerGuid].wins + 1;
-			newGame.lastWinner = {
-				playerGuid: winnerGuid,
-				whiteCardId
-			};
+		const played = existingGame.roundCards[winnerPlayerGuid];
+		newGame.players[winnerPlayerGuid].wins = newGame.players[winnerPlayerGuid].wins + 1;
+		newGame.lastWinner = {
+			playerGuid: winnerPlayerGuid,
+			whiteCardIds: played
+		};
 
-			await this.updateGame(newGame);
+		await this.updateGame(newGame);
 
-			return winnerGuid;
-		}
-
-		throw new Error("Invalid selection");
+		return winnerPlayerGuid;
 	}
 }
 

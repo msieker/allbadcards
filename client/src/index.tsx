@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import App from "./App/App";
 import {BrowserRouter} from "react-router-dom";
-import {grey} from "@material-ui/core/colors";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import {MuiThemeProvider} from "@material-ui/core";
 import {SimplePaletteColorOptions} from "@material-ui/core/styles";
@@ -13,13 +12,20 @@ const primary: SimplePaletteColorOptions = {
 	main: "#000",
 	contrastText: "#FFFFFF",
 	dark: "#222",
-	light: "#EEE"
+	light: "#EEE",
+};
+
+const secondary: SimplePaletteColorOptions = {
+	main: "#FFF",
+	contrastText: "#000",
+	dark: "#EEE",
+	light: "#222",
 };
 
 const theme = createMuiTheme({
 	palette: {
 		primary,
-		secondary: grey,
+		secondary,
 	},
 });
 

@@ -2,6 +2,7 @@ import {DataStore} from "./DataStore";
 import {GameItem, IBlackCard, IWhiteCard, Platform} from "../Platform/platform";
 import {UserDataStore} from "./UserDataStore";
 import deepEqual from "deep-equal";
+import {ArrayFlatten} from "../Utils/ArrayUtils";
 
 export type WhiteCardMap = { [cardId: number]: IWhiteCard };
 
@@ -81,7 +82,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			return;
 		}
 
-		const cardIds = Object.values(toLoad);
+		const cardIds = ArrayFlatten<number>(Object.values(toLoad));
 
 		this.loadWhiteCardMap(cardIds)
 			.then(roundCardDefs => this.update({
@@ -139,29 +140,27 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			.catch(e => console.error(e));
 	}
 
-	public playWhiteCard(cardId: number | undefined, userGuid: string)
+	public playWhiteCards(cardIds: number[] | undefined, userGuid: string)
 	{
-		console.log("[GameDataStore] Played white card...", cardId, userGuid);
+		console.log("[GameDataStore] Played white cards...", cardIds, userGuid);
 
-		if (!this.state.game || !cardId)
+		if (!this.state.game || !cardIds)
 		{
 			throw new Error("Invalid card or game!");
 		}
 
-		Platform.playCard(this.state.game.id, userGuid, cardId)
+		Platform.playCards(this.state.game.id, userGuid, cardIds)
 			.catch(e => console.error(e));
 	}
 
-	public chooseWinner(cardId: number | undefined, userGuid: string)
+	public chooseWinner(chooserGuid: string, winningPlayerGuid: string)
 	{
-		console.log("[GameDataStore] Choosing winner...", cardId, userGuid);
-
-		if (!this.state.game || !cardId)
+		if (!this.state.game || !chooserGuid)
 		{
 			throw new Error("Invalid card or game!");
 		}
 
-		Platform.selectWinnerCard(this.state.game.id, userGuid, cardId)
+		Platform.selectWinnerCard(this.state.game.id, chooserGuid, winningPlayerGuid)
 			.catch(e => console.error(e));
 	}
 

@@ -6,7 +6,6 @@ import {gamesOwnedLsKey} from "../GameDashboard/GameDashboard";
 import {GameDataStore, IGameDataStorePayload} from "../../Global/DataStore/GameDataStore";
 import {GamePlayWhite} from "./GamePlayWhite";
 import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
-import {Simulate} from "react-dom/test-utils";
 import {GamePlayBlack} from "./GamePlayBlack";
 
 interface IGameParams
@@ -58,7 +57,8 @@ class Game extends React.Component<RouteComponentProps<IGameParams>, IGameState>
 
 		const {
 			started,
-			chooserGuid
+			chooserGuid,
+			players
 		} = this.state.gameData.game ?? {};
 
 		const {
@@ -67,10 +67,11 @@ class Game extends React.Component<RouteComponentProps<IGameParams>, IGameState>
 
 		const isOwner = this.gameIsOwned(id);
 		const isChooser = playerGuid === chooserGuid;
+		const amInGame = playerGuid in (players ?? {});
 
 		return (
 			<>
-				{!started && (
+				{(!started || !amInGame) && (
 					<BeforeGame gameId={id} isOwner={isOwner} />
 				)}
 

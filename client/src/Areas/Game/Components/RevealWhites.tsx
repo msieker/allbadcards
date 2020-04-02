@@ -5,8 +5,6 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import {GameDataStore, IGameDataStorePayload} from "../../../Global/DataStore/GameDataStore";
 import {IUserData, UserDataStore} from "../../../Global/DataStore/UserDataStore";
-import {IWhiteCard, Platform} from "../../../Global/Platform/platform";
-import {Container} from "@material-ui/core";
 
 interface IRevealWhitesProps
 {
@@ -61,13 +59,17 @@ export class RevealWhites extends React.Component <Props, State>
 		} = this.state;
 
 		const whiteCards = Object.values(gameData.roundCardDefs);
-		const game = this.state.gameData.game;
+		const roundCardKeys = Object.keys(gameData.game?.roundCards ?? {});
+		const game = gameData.game;
+		const roundPlayers = Object.keys(game?.roundCards ?? {});
 		const remainingPlayerGuids = Object.keys(game?.players ?? {})
 			.filter(pg => !(pg in (game?.roundCards ?? {})) && pg !== game?.chooserGuid);
 		const remainingPlayers = remainingPlayerGuids.map(pg => game?.players?.[pg]?.nickname);
-		const revealedIndex = this.state.gameData.game?.revealIndex ?? 0;
+		const revealedIndex = game?.revealIndex ?? 0;
+		const cardsIdsRevealed = game?.roundCards[roundPlayers[revealedIndex]] ?? [];
+		const cardsRevealed = cardsIdsRevealed.map(cid => whiteCards.find(c => c.id === cid)!);
 		const timeToPick = remainingPlayers.length === 0;
-		const revealMode = timeToPick && revealedIndex < whiteCards.length;
+		const revealMode = timeToPick && revealedIndex < roundCardKeys.length;
 
 		if (!revealMode)
 		{
@@ -77,13 +79,21 @@ export class RevealWhites extends React.Component <Props, State>
 		return (
 			<Grid item xs={12} sm={6}>
 				{revealedIndex >= 0 && (
-					<WhiteCard key={revealedIndex}>
-						{whiteCards[revealedIndex].response}
-						<Divider style={{margin: "1rem 0"}}/>
-						{this.props.canReveal && (
-							<Button color={"primary"} variant={"contained"} onClick={this.onReveal}>Next</Button>
-						)}
-					</WhiteCard>
+					<>
+						<WhiteCard key={revealedIndex} style={{marginBottom: "0.5rem"}}>
+							{cardsRevealed.map(card => (
+								<>
+									<div>{card.response}</div>
+									<Divider style={{margin: "1rem 0"}}/>
+								</>
+							))}
+							{this.props.canReveal && (
+								<Button color={"primary"} variant={"contained"} onClick={this.onReveal}>
+									Next
+								</Button>
+							)}
+						</WhiteCard>
+					</>
 				)}
 				{revealedIndex === -1 && this.props.canReveal && (
 					<Button color={"primary"} variant={"contained"} onClick={this.onReveal}>Show me the cards!</Button>

@@ -1,16 +1,22 @@
 import * as React from "react";
-import {AppBar} from "@material-ui/core";
+import {useEffect, useState} from "react";
+import {AppBar, DialogTitle} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import CardMedia from '@material-ui/core/CardMedia';
 import Container from "@material-ui/core/Container";
-import Card from "@material-ui/core/Card";
 import {makeStyles} from "@material-ui/styles";
 import CardContent from "@material-ui/core/CardContent";
 import {Routes} from "./Routes";
-import {useEffect} from "react";
 import {UserDataStore} from "../Global/DataStore/UserDataStore";
 import styled from "@material-ui/styles/styled";
+import Paper from "@material-ui/core/Paper";
+import {MdPeople} from "react-icons/all";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import {GameRoster} from "../Areas/Game/Components/GameRoster";
+import {Link} from "react-router-dom";
 
 interface IAppProps
 {
@@ -28,8 +34,24 @@ interface IAppState
 }
 
 const useStyles = makeStyles({
-	card: {
-		height: "100vh"
+	logoIcon: {
+		height: "2rem",
+		width: "auto"
+	},
+	settingsButton: {
+		minWidth: 0,
+		fontSize: "1.5rem",
+	},
+	rosterButton: {
+		minWidth: 0,
+		fontSize: "1.5rem",
+		marginLeft: "auto"
+	},
+	logo: {
+		color: "#000",
+		textDecoration: "none",
+		display: "flex",
+		alignItems: "center"
 	}
 });
 
@@ -45,6 +67,8 @@ const App: React.FC = () =>
 {
 	const classes = useStyles();
 
+	const [rosterOpen, setRosterOpen] = useState(false);
+
 	useEffect(() =>
 	{
 		UserDataStore.initialize();
@@ -53,21 +77,34 @@ const App: React.FC = () =>
 	return (
 		<div>
 			<OuterContainer>
-				<Container maxWidth={"sm"} style={{padding: 0, background: "#FFF", minHeight: "100vh"}}>
-					<CardMedia>
-						<AppBar position="static">
-							<Toolbar>
-								<Typography variant="h6">
-									Let's Play WTF
-								</Typography>
-							</Toolbar>
-						</AppBar>
-					</CardMedia>
-					<CardContent>
-						<Routes/>
-					</CardContent>
-				</Container>
+				<Paper elevation={10}>
+					<Container maxWidth={"sm"} style={{position: "relative", padding: 0, background: "#FFF", minHeight: "100vh"}}>
+						<CardMedia>
+							<AppBar color={"transparent"} position="static" elevation={0}>
+								<Toolbar>
+									<Typography variant="h6">
+										<Link to={"/"} className={classes.logo}>
+											<img className={classes.logoIcon} src={"/logo-small.png"} style={{paddingRight: "1rem"}}/> Let's Play WTF
+										</Link>
+									</Typography>
+									<Button className={classes.rosterButton} size={"large"} onClick={() => setRosterOpen(true)}>
+										<MdPeople/>
+									</Button>
+								</Toolbar>
+							</AppBar>
+						</CardMedia>
+						<CardContent>
+							<Routes/>
+						</CardContent>
+					</Container>
+				</Paper>
 			</OuterContainer>
+			<Dialog open={rosterOpen} onClose={() => setRosterOpen(false)}>
+				<DialogTitle id="form-dialog-title">Game Roster</DialogTitle>
+				<DialogContent>
+					<GameRoster/>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };

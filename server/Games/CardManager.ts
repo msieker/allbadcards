@@ -27,7 +27,7 @@ export class CardManager
 	{
 		const blackCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/prompts.json"), "utf8");
 		const whiteCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/responses.json"), "utf8");
-		this.blackCards = (JSON.parse(blackCardsFile) as IBlackCard[]).filter(c => c.special === "");
+		this.blackCards = (JSON.parse(blackCardsFile) as IBlackCard[]);
 		this.whiteCards = JSON.parse(whiteCardsFile);
 	}
 
@@ -74,12 +74,18 @@ export class CardManager
 			usedWhiteCards = [];
 		}
 
+		const foundBlackCard = this.blackCards.find(c => c.id === gameItem.blackCard);
+
+		const targetHandSize = foundBlackCard?.special === "DRAW 2, PICK 3"
+			? 9
+			: 7;
+
 		const newHands = playerKeys
 			.reduce((hands, playerGuid) =>
 			{
 				hands[playerGuid] = gameItem.players[playerGuid].whiteCards;
 
-				while (hands[playerGuid].length < 7)
+				while (hands[playerGuid].length < targetHandSize)
 				{
 					const newCard = this.getAllowedCard(this.whiteCards, usedWhiteCards);
 					usedWhiteCards.push(newCard.id);

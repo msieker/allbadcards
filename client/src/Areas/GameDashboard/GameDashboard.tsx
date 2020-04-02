@@ -1,6 +1,6 @@
 import * as React from "react";
 import {List} from "@material-ui/core";
-import {GiCardDraw, GiCardPlay} from "react-icons/all";
+import {GiCardDraw} from "react-icons/all";
 import Button from "@material-ui/core/Button";
 import {RouteComponentProps, withRouter} from "react-router";
 import ButtonGroup from "@material-ui/core/ButtonGroup";

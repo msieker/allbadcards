@@ -1,16 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
-import {GoPerson} from "react-icons/all";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Divider from "@material-ui/core/Divider";
 import {makeStyles} from "@material-ui/core/styles";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {GameDataStore} from "../../Global/DataStore/GameDataStore";
-import {UserDataStore} from "../../Global/DataStore/UserDataStore";
+import {GameRoster} from "./Components/GameRoster";
 
 interface IGamePreviewProps
 {
@@ -63,24 +57,7 @@ const GamePreview: React.FC<IGamePreviewProps> = (props) =>
 			</CopyToClipboard>
 
 			<Typography className={classes.playersLabel}>Players</Typography>
-			<List>
-				{players.map(player => (
-					<>
-						<ListItem>
-							<ListItemIcon>
-								<GoPerson/>
-							</ListItemIcon>
-							<ListItemText>
-								{player.nickname}
-								{player.guid === gameData.game?.ownerGuid && <>
-                                    <span> (Owner)</span>
-                                </>}
-							</ListItemText>
-						</ListItem>
-						<Divider/>
-					</>
-				))}
-			</List>
+			<GameRoster />
 			{props.children}
 		</div>
 	);

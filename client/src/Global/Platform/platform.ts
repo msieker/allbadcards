@@ -1,7 +1,4 @@
-interface IWSMessage
-{
-	playerGuid: string;
-}
+type PlayerMap = { [key: string]: GamePlayer };
 
 export interface GamePlayer
 {
@@ -15,22 +12,23 @@ export interface GamePlayer
 export interface GameItem
 {
 	id: string;
+	roundIndex: number;
+	roundStarted: boolean;
 	ownerGuid: string;
 	chooserGuid: string | null;
+	started: boolean;
 	dateCreated: Date;
 	public: boolean;
-	players: { [key: string]: GamePlayer };
+	players: PlayerMap;
 	blackCard: number;
-	started: boolean;
 	// key = player guid, value = white card ID
-	roundCards: { [key: string]: number };
+	roundCards: { [key: string]: number[] };
 	usedBlackCards: number[];
 	usedWhiteCards: number[];
 	revealIndex: number;
-	roundStarted: boolean;
 	lastWinner: {
 		playerGuid: string;
-		whiteCardId: number;
+		whiteCardIds: number[];
 	} | undefined;
 }
 
@@ -95,6 +93,15 @@ class _Platform
 		});
 	}
 
+	public async removePlayer(gameId: string, targetGuid: string, playerGuid: string)
+	{
+		return _Platform.doPost<GameItem>("/api/game/kick", {
+			gameId,
+			targetGuid,
+			playerGuid
+		});
+	}
+
 	public async startGame(ownerGuid: string, gameId: string)
 	{
 		return _Platform.doPost<GameItem>("/api/game/start", {
@@ -103,21 +110,21 @@ class _Platform
 		});
 	}
 
-	public async playCard(gameId: string, playerGuid: string, cardId: number)
+	public async playCards(gameId: string, playerGuid: string, cardIds: number[])
 	{
-		return _Platform.doPost<GameItem>("/api/game/play-card", {
+		return _Platform.doPost<GameItem>("/api/game/play-cards", {
 			gameId,
 			playerGuid,
-			cardId
+			cardIds
 		});
 	}
 
-	public async selectWinnerCard(gameId: string, playerGuid: string, whiteCardId: number)
+	public async selectWinnerCard(gameId: string, playerGuid: string, winningPlayerGuid: string)
 	{
 		return _Platform.doPost<GameItem>("/api/game/select-winner-card", {
 			gameId,
 			playerGuid,
-			whiteCardId
+			winningPlayerGuid
 		});
 	}
 

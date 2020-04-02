@@ -46,6 +46,13 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		res.send(result);
 	});
 
+	app.post("/api/game/kick", async (req, res) => {
+		console.log(req.url, req.body);
+		const result = await GameManager.kickPlayer(req.body.gameId, req.body.targetGuid, req.body.playerGuid);
+
+		res.send(result);
+	});
+
 	app.post("/api/game/start", async (req, res) => {
 		console.log(req.url, req.body);
 		const result = await GameManager.startGame(req.body.gameId, req.body.ownerGuid);
@@ -53,9 +60,9 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		res.send(result);
 	});
 
-	app.post("/api/game/play-card", async (req, res) => {
+	app.post("/api/game/play-cards", async (req, res) => {
 		console.log(req.url, req.body);
-		const result = await GameManager.playCard(req.body.gameId, req.body.playerGuid, req.body.cardId);
+		const result = await GameManager.playCard(req.body.gameId, req.body.playerGuid, req.body.cardIds);
 
 		res.send(result);
 	});
@@ -76,7 +83,7 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 
 	app.post("/api/game/select-winner-card", async(req, res) => {
 		console.log(req.url, req.body);
-		const result = await GameManager.selectWinnerCard(req.body.gameId, req.body.playerGuid, req.body.whiteCardId);
+		const result = await GameManager.selectWinnerCard(req.body.gameId, req.body.playerGuid, req.body.winningPlayerGuid);
 
 		res.send(result);
 	});

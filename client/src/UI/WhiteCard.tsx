@@ -2,68 +2,52 @@ import * as React from "react";
 import {Card} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import CardActions from "@material-ui/core/CardActions";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 interface IWhiteCardProps
 {
 	onSelect?: () => void;
+	actions?: React.ReactNode;
+	style?: React.CSSProperties;
 }
 
-interface DefaultProps
-{
-}
-
-type Props = IWhiteCardProps & DefaultProps;
-type State = IWhiteCardState;
-
-interface IWhiteCardState
-{
-	elevation: number;
-}
-
-export class WhiteCard extends React.Component<Props, State>
-{
-	constructor(props: Props)
-	{
-		super(props);
-
-		this.state = {
-			elevation: 2
-		};
+const useStyles = makeStyles({
+	card: {
+		display: "flex",
+		flexDirection: "column",
+		minHeight: "33vh"
 	}
+});
 
-	private onMouseEnter = () => {
-		this.setState({
-			elevation: 10
-		});
-	};
+export const WhiteCard: React.FC<IWhiteCardProps> = (props) =>
+{
+	const {
+		onSelect,
+		children,
+		actions,
+		style
+	} = props;
 
-	private onMouseLeave = () => {
-		this.setState({
-			elevation: 2
-		});
-	};
+	const classes = useStyles();
 
-	public render()
-	{
-		const {
-			onSelect,
-			children,
- 		} = this.props;
-
-		return (
-			<Card
-				style={{minHeight: "33vh", cursor: "pointer"}}
-				elevation={this.state.elevation}
-				onMouseEnter={this.onMouseEnter}
-				onMouseLeave={this.onMouseLeave}
-				onClick={onSelect}
-			>
-				<CardContent>
-					<Typography variant={"h5"}>
-						{children}
-					</Typography>
-				</CardContent>
-			</Card>
-		);
-	}
-}
+	return (
+		<Card
+			className={classes.card}
+			onClick={onSelect}
+			elevation={5}
+			style={style}
+		>
+			<CardContent style={{flex: "1"}}>
+				<Typography variant={"h5"}>
+					{children}
+				</Typography>
+			</CardContent>
+			{actions && (
+				<CardActions>
+					{actions}
+				</CardActions>
+			)}
+		</Card>
+	);
+};
