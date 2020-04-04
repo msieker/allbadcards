@@ -65,11 +65,12 @@ export class RevealWhites extends React.Component <Props, State>
 		const remainingPlayerGuids = Object.keys(game?.players ?? {})
 			.filter(pg => !(pg in (game?.roundCards ?? {})) && pg !== game?.chooserGuid);
 		const remainingPlayers = remainingPlayerGuids.map(pg => game?.players?.[pg]?.nickname);
-		const revealedIndex = game?.revealIndex ?? 0;
+		const realRevealIndex = game?.revealIndex ?? 0;
+		const revealedIndex = (realRevealIndex + (game?.randomOffset ?? 0)) % roundPlayers.length;
 		const cardsIdsRevealed = game?.roundCards[roundPlayers[revealedIndex]] ?? [];
 		const cardsRevealed = cardsIdsRevealed.map(cid => whiteCards.find(c => c.id === cid)!);
 		const timeToPick = remainingPlayers.length === 0;
-		const revealMode = timeToPick && revealedIndex < roundCardKeys.length;
+		const revealMode = timeToPick && realRevealIndex < roundCardKeys.length;
 
 		if (!revealMode)
 		{
@@ -78,7 +79,7 @@ export class RevealWhites extends React.Component <Props, State>
 
 		return (
 			<Grid item xs={12} sm={6}>
-				{revealedIndex >= 0 && (
+				{realRevealIndex >= 0 && (
 					<>
 						<WhiteCard key={revealedIndex} style={{marginBottom: "0.5rem"}}>
 							{cardsRevealed.map(card => (
@@ -95,7 +96,7 @@ export class RevealWhites extends React.Component <Props, State>
 						</WhiteCard>
 					</>
 				)}
-				{revealedIndex === -1 && this.props.canReveal && (
+				{realRevealIndex === -1 && this.props.canReveal && (
 					<Button color={"primary"} variant={"contained"} onClick={this.onReveal}>Show me the cards!</Button>
 				)}
 			</Grid>

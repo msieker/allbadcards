@@ -43,6 +43,7 @@ export interface GameItem
 		playerGuid: string;
 		whiteCardIds: number[];
 	} | undefined;
+	randomOffset: number;
 }
 
 interface ICard
@@ -208,7 +209,8 @@ class _GameManager
 				usedBlackCards: [],
 				usedWhiteCards: [],
 				revealIndex: -1,
-				lastWinner: undefined
+				lastWinner: undefined,
+				randomOffset: 0
 			};
 
 			const gameItem = CardManager.nextBlackCard(initialGameItem);
@@ -235,7 +237,7 @@ class _GameManager
 	{
 		const existingGame = await this.getGame(gameId);
 
-		if (Object.keys(existingGame.players).length >= 8)
+		if (Object.keys(existingGame.players).length >= 20)
 		{
 			throw new Error("This game is full.");
 		}
@@ -287,7 +289,7 @@ class _GameManager
 
 		if (existingGame.chooserGuid !== chooserGuid)
 		{
-			throw new Error("You are not the chooser!");
+			throw new Error("You are not the cchooser!");
 		}
 
 		const newGame = {...existingGame};
@@ -315,7 +317,7 @@ class _GameManager
 			const player = existingGame.players[playerGuid];
 			const newPlayer = {...player};
 			const usedCards = existingGame.roundCards[playerGuid] ?? [];
-			newPlayer.whiteCards = player.whiteCards.filter(wc => usedCards.includes(wc));
+			newPlayer.whiteCards = player.whiteCards.filter(wc => !usedCards.includes(wc));
 			acc[playerGuid] = newPlayer;
 
 			return acc;
@@ -324,6 +326,7 @@ class _GameManager
 		// Reset the played cards for the round
 		newGame.roundCards = {};
 
+		newGame.randomOffset = Math.floor(Math.random() * playerGuids.length);
 
 		// Deal a new hand
 		const newHands = await CardManager.dealWhiteCards(newGame);
@@ -432,7 +435,7 @@ class _GameManager
 
 		await this.updateGame(newGame);
 
-		return winnerPlayerGuid;
+		return newGame;
 	}
 }
 

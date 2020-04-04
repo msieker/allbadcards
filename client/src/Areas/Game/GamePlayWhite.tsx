@@ -53,6 +53,16 @@ export class GamePlayWhite extends React.Component<Props, State>
 		}));
 	}
 
+	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void
+	{
+		if(prevState.gameData.game?.roundIndex !== this.state.gameData.game?.roundIndex)
+		{
+			this.setState({
+				pickedCards: []
+			});
+		}
+	}
+
 	private onCommit = () =>
 	{
 		const hasSelected = this.state.userData.playerGuid in (this.state.gameData.game?.roundCards ?? {});
@@ -116,7 +126,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 		const chooser = players?.[chooserGuid!]?.nickname;
 
 		const waitingLabel = remainingPlayers.length === 0
-			? `Waiting for ${players?.[chooserGuid ?? ""]?.nickname} to pick the winner. You played:`
+			? `Waiting for ${players?.[chooserGuid ?? ""]?.nickname} to pick the winner.`
 			: `Picking: ${remainingPlayers.join(", ")}`;
 
 		const hasPlayed = userData.playerGuid in roundCards;
@@ -140,6 +150,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 		}
 
 		const metPickTarget = targetPicked <= this.state.pickedCards.length;
+		const revealTime = gameData.game.revealIndex >= 0 && gameData.game.revealIndex <= Object.keys(roundCards).length;
 
 		return (
 			<div style={{paddingBottom: "4rem"}}>
@@ -171,7 +182,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 					<ShowWinner/>
 				</Grid>
 				<Divider style={{margin: "1rem 0"}}/>
-				{!hasWinner && roundStarted && (
+				{!hasWinner && roundStarted && !revealTime && (
 					<Grid container spacing={2}>
 						{renderedWhiteCards.map(card =>
 						{
@@ -217,7 +228,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 						})}
 					</Grid>
 				)}
-				{!hasPlayed && metPickTarget && (
+				{!hasPlayed && metPickTarget && !revealTime && (
 					<Confirmation>
 						<Button
 							size={"large"}

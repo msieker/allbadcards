@@ -122,6 +122,9 @@ export class GamePlayBlack extends React.Component<Props, State>
 				</div>
 				<Divider style={{margin: "1rem 0"}}/>
 				<Grid container spacing={2} style={{justifyContent: "center"}}>
+					{!roundStarted && (
+						<Typography style={{marginBottom: "0.5rem"}}>Read the card aloud, then click Start The Round!</Typography>
+					)}
 					<Grid item xs={12} sm={6}>
 						<BlackCard>
 							{gameData.blackCardDef?.prompt}

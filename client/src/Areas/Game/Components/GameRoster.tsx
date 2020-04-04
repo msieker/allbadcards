@@ -48,7 +48,7 @@ export const GameRoster = () =>
 	const isOwner = gameData.game?.ownerGuid === userData.playerGuid;
 
 	return (
-		<div style={{width: "90vw", maxWidth: 500}}>
+		<div style={{width: "75vw", maxWidth: 500}}>
 			<List>
 				{players.map(player => (
 					<>

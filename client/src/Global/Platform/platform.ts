@@ -1,3 +1,5 @@
+import {ErrorDataStore} from "../DataStore/ErrorDataStore";
+
 type PlayerMap = { [key: string]: GamePlayer };
 
 export interface GamePlayer
@@ -30,6 +32,7 @@ export interface GameItem
 		playerGuid: string;
 		whiteCardIds: number[];
 	} | undefined;
+	randomOffset: number;
 }
 
 export interface ICard
@@ -58,7 +61,18 @@ class _Platform
 	private static async doGet<TData>(url: string)
 	{
 		return await fetch(url)
-			.then(r => r.json()) as Promise<TData>;
+			.then(async r =>
+			{
+				if (r.ok)
+				{
+					return r.json();
+				}
+				else
+				{
+					throw await r.json();
+				}
+			})
+			.catch(ErrorDataStore.add) as Promise<TData>;
 	}
 
 	private static async doPost<TData>(url: string, data: any)
@@ -67,7 +81,19 @@ class _Platform
 			method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify(data)
-		}).then(r => r.json()) as Promise<TData>;
+		})
+			.then(async r =>
+			{
+				if (r.ok)
+				{
+					return r.json();
+				}
+				else
+				{
+					throw await r.json();
+				}
+			})
+			.catch(ErrorDataStore.add) as Promise<TData>;
 	}
 
 	public async getGame(gameId: string)
@@ -154,8 +180,9 @@ class _Platform
 
 	public async getWhiteCard(cardId: number)
 	{
-		return new Promise<IWhiteCard>((resolve, reject) => {
-			if(cardId in this.loadedWhiteCards)
+		return new Promise<IWhiteCard>((resolve, reject) =>
+		{
+			if (cardId in this.loadedWhiteCards)
 			{
 				resolve(this.loadedWhiteCards[cardId]);
 			}

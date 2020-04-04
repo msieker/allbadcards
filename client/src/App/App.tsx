@@ -17,6 +17,10 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import {GameRoster} from "../Areas/Game/Components/GameRoster";
 import {Link} from "react-router-dom";
+import {ErrorDataStore} from "../Global/DataStore/ErrorDataStore";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 interface IAppProps
 {
@@ -68,10 +72,12 @@ const App: React.FC = () =>
 	const classes = useStyles();
 
 	const [rosterOpen, setRosterOpen] = useState(false);
+	const [errorPayload, setErrors] = useState(ErrorDataStore.state);
 
 	useEffect(() =>
 	{
 		UserDataStore.initialize();
+		ErrorDataStore.listen(setErrors);
 	}, []);
 
 	return (
@@ -103,6 +109,22 @@ const App: React.FC = () =>
 				<DialogTitle id="form-dialog-title">Game Roster</DialogTitle>
 				<DialogContent>
 					<GameRoster/>
+				</DialogContent>
+			</Dialog>
+			<Dialog open={errorPayload.errors.length > 0} onClose={ErrorDataStore.clear}>
+				<DialogTitle id="form-dialog-title">Errors</DialogTitle>
+				<DialogContent>
+					<List>
+						{errorPayload.errors.map(error => (
+							<ListItem>
+								<ListItemText>
+									<pre>
+										{error.stack}
+									</pre>
+								</ListItemText>
+							</ListItem>
+						))}
+					</List>
 				</DialogContent>
 			</Dialog>
 		</div>

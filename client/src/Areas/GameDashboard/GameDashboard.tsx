@@ -7,6 +7,9 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {GameItem, Platform} from "../../Global/Platform/platform";
 import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
 import {NicknameDialog} from "../../UI/NicknameDialog";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 interface IGameDashboardProps extends RouteComponentProps
 {
@@ -53,13 +56,15 @@ class GameDashboard extends React.Component<Props, State>
 		});
 	};
 
-	private onNicknameClose = () => {
+	private onNicknameClose = () =>
+	{
 		this.setState({
 			nicknameDialogOpen: false
 		});
 	};
 
-	private onNicknameConfirm = async (nickname: string) => {
+	private onNicknameConfirm = async (nickname: string) =>
+	{
 		const game = await Platform.createGame(this.state.userData.playerGuid, nickname);
 		this.storeOwnedGames(game);
 		this.props.history.push(`/game/${game.id}`)
@@ -76,12 +81,10 @@ class GameDashboard extends React.Component<Props, State>
 	public render()
 	{
 		return (
-			<>
-				<List>
+			<Container style={{textAlign: "center"}}>
+				<img style={{width: "50%", margin: "auto"}} src={"/logo-large.png"}/>
 
-				</List>
-
-				<ButtonGroup style={{width: "100%"}}>
+				<ButtonGroup style={{width: "100%", justifyContent: "center", marginTop: "2rem"}}>
 					<Button
 						variant="contained"
 						color="primary"
@@ -98,7 +101,12 @@ class GameDashboard extends React.Component<Props, State>
 					onConfirm={this.onNicknameConfirm}
 					title={"Please enter your nickname:"}
 				/>
-			</>
+				<Paper style={{padding: "1rem", marginTop: "3rem"}} elevation={5}>
+					<Typography variant={"caption"}>
+						Cards Against Humanity by Cards Against Humanity LLC is licensed under CC BY-NC-SA 2.0.
+					</Typography>
+				</Paper>
+			</Container>
 		);
 	}
 }
