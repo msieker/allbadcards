@@ -1,6 +1,7 @@
 import {GameItem, GameManager} from "./GameManager";
 import fs from "fs";
 import * as path from "path";
+import levenshtein from "js-levenshtein";
 
 interface ICard
 {
@@ -27,8 +28,59 @@ export class CardManager
 	{
 		const blackCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/prompts.json"), "utf8");
 		const whiteCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/responses.json"), "utf8");
-		this.blackCards = (JSON.parse(blackCardsFile) as IBlackCard[]);
-		this.whiteCards = JSON.parse(whiteCardsFile);
+		const ogBlackCards = (JSON.parse(blackCardsFile) as IBlackCard[]);
+		const ogWhiteCards = JSON.parse(whiteCardsFile) as IWhiteCard[];
+
+		/**
+		 * Remove all the duplicate cards, based on a graduated levenshtein distance.
+		 * Cards with < 7 characters will be checked for an exact, case insensitive match.
+		 * Cards with > 7 characters will be checked for a levenshtein distance of ~15% of the string length.
+		 *      e.g. String with length 7 will fail when matched with levenshtein distance of 1. String of length 14 will fail with LD of 2, etc.
+		 * @param {T[]} acc
+		 * @param {T} card
+		 * @param {(card: T) => string} getCardProperty
+		 * @returns {T | undefined}
+		 */
+		const doMatch = <T extends ICard>(acc: T[], card: T, getCardProperty: (card: T) => string) => {
+			return acc.find(c => {
+				const cVal = getCardProperty(c);
+				const cardVal = getCardProperty(card);
+				const isExact = cVal.toLowerCase() === cardVal.toLowerCase();
+				const levElligible = cVal.length > 7;
+				const levDist = Math.floor(cVal.length / 7);
+				const isLevMatch = levElligible && levenshtein(cVal, cardVal) < levDist;
+				return isExact || isLevMatch;
+			});
+		};
+
+		this.blackCards = ogBlackCards.reduce((acc, card) =>
+		{
+			const matchFound = doMatch(acc, card, (card) => card.prompt);
+
+			if (!matchFound)
+			{
+				acc.push(card);
+			}
+
+			return acc;
+		}, [] as IBlackCard[]);
+
+		console.log(`Removed ${ogBlackCards.length - this.blackCards.length} duplicate black cards`);
+
+
+		this.whiteCards = ogWhiteCards.reduce((acc, card) =>
+		{
+			const matchFound = doMatch(acc, card, (card) => card.response);
+
+			if (!matchFound)
+			{
+				acc.push(card);
+			}
+
+			return acc;
+		}, [] as IWhiteCard[]);
+
+		console.log(`Removed ${ogWhiteCards.length - this.whiteCards.length} duplicate white cards`);
 	}
 
 	private static getAllowedCard(cards: ICard[], usedCards: number[])
@@ -39,7 +91,7 @@ export class CardManager
 		const newCardId = allowedIds[index];
 		const newCard = allowedCards.find(c => c.id === newCardId);
 
-		if(!newCard)
+		if (!newCard)
 		{
 			throw new Error("Unable to get valid card");
 		}
@@ -69,7 +121,7 @@ export class CardManager
 		const availableCardRemainingCount = this.whiteCards.length - usedWhiteCards.length;
 
 		// If we run out of white cards, reset them
-		if(availableCardRemainingCount < playerKeys.length)
+		if (availableCardRemainingCount < playerKeys.length)
 		{
 			usedWhiteCards = [];
 		}

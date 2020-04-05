@@ -237,7 +237,7 @@ class _GameManager
 	{
 		const existingGame = await this.getGame(gameId);
 
-		if (Object.keys(existingGame.players).length >= 20)
+		if (Object.keys(existingGame.players).length >= 50)
 		{
 			throw new Error("This game is full.");
 		}
