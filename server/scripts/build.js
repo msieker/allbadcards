@@ -7,4 +7,5 @@ const serverEnv = process.argv.find(a => a.includes("serverenv")).split("=")[1];
 const compiler = webpack(configFactory(serverEnv));
 compiler.run((err, stats) => {
     finalize.finalize();
+    console.log("Finished at " + (new Date()));
 });

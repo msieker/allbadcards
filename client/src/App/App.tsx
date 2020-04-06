@@ -25,6 +25,7 @@ import {CopyGameLink} from "../UI/CopyGameLink";
 import {GameDataStore} from "../Global/DataStore/GameDataStore";
 import {useHistory} from "react-router";
 import {SiteRoutes} from "../Global/Routes/Routes";
+import ReactGA from "react-ga";
 
 interface IAppProps
 {
@@ -91,6 +92,9 @@ const App: React.FC = () =>
 	{
 		UserDataStore.initialize();
 		ErrorDataStore.listen(setErrors);
+		history.listen(() => {
+			ReactGA.pageview(window.location.pathname + window.location.search);
+		});
 	}, []);
 
 	return (

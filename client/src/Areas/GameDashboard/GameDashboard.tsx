@@ -10,6 +10,7 @@ import {NicknameDialog} from "../../UI/NicknameDialog";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import {SponsorList} from "./SponsorList";
 
 interface IGameDashboardProps extends RouteComponentProps
 {
@@ -101,6 +102,9 @@ class GameDashboard extends React.Component<Props, State>
 					onConfirm={this.onNicknameConfirm}
 					title={"Please enter your nickname:"}
 				/>
+				<div>
+					<SponsorList/>
+				</div>
 				<Paper style={{padding: "1rem", marginTop: "3rem"}} elevation={5}>
 					<Typography variant={"caption"}>
 						Cards Against Humanity by Cards Against Humanity LLC is licensed under CC BY-NC-SA 2.0.
