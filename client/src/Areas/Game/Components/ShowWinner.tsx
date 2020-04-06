@@ -74,6 +74,8 @@ export class ShowWinner extends React.Component<Props, State>
 
 		const winner = game.players[lastWinner.playerGuid];
 
+		const sortedPlayerGuids = [...playerGuids].sort((a, b) => game.players[b].wins - game.players[a].wins);
+
 		return (
 			<>
 				<Grid item xs={12} sm={6}>
@@ -100,7 +102,7 @@ export class ShowWinner extends React.Component<Props, State>
 					</Typography>
 					<div>
 						<Typography>Scoreboard:</Typography>
-						{playerGuids.map(pg => (
+						{sortedPlayerGuids.map(pg => (
 							<Typography>
 								{game?.players[pg].nickname}: <strong>{game?.players[pg].wins}</strong>
 							</Typography>

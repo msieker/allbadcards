@@ -12,33 +12,68 @@ interface IBlackCard extends ICard
 {
 	prompt: string;
 	special: string;
+	isDuplicate: boolean;
 }
 
 interface IWhiteCard extends ICard
 {
 	response: string;
+	isDuplicate: boolean;
 }
 
 export class CardManager
 {
 	public static blackCards: IBlackCard[];
 	public static whiteCards: IWhiteCard[];
+	private static updateDupes = false;
 
 	public static initialize()
 	{
-		const blackCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/prompts.json"), "utf8");
-		const whiteCardsFile = fs.readFileSync(path.resolve(process.cwd(), "./server/data/responses.json"), "utf8");
-		const ogBlackCards = (JSON.parse(blackCardsFile) as IBlackCard[]);
+		const promptsPath = path.resolve(process.cwd(), "./server/data/prompts.json");
+		const responsesPath = path.resolve(process.cwd(), "./server/data/responses.json");
+
+		const blackCardsFile = fs.readFileSync(promptsPath, "utf8");
+		const whiteCardsFile = fs.readFileSync(responsesPath, "utf8");
+		const ogBlackCards = JSON.parse(blackCardsFile) as IBlackCard[];
 		const ogWhiteCards = JSON.parse(whiteCardsFile) as IWhiteCard[];
 
+		if(this.updateDupes)
+		{
+			const [dedupedWhite, dedupedBlack] = this.findDupes(ogWhiteCards, ogBlackCards);
+			ogWhiteCards.forEach(wc => {
+				if(!dedupedWhite.includes(wc))
+				{
+					wc
+						.isDuplicate = true;
+				}
+			});
+			ogBlackCards.forEach(bc => {
+				if(!dedupedBlack.includes(bc))
+				{
+					bc.isDuplicate = true;
+				}
+			});
+
+			fs.writeFileSync(promptsPath, JSON.stringify(ogBlackCards, null, 4));
+			fs.writeFileSync(responsesPath, JSON.stringify(ogWhiteCards, null, 4));
+		}
+
+		this.whiteCards = ogWhiteCards.filter(c => !c.isDuplicate);
+		this.blackCards = ogBlackCards.filter(c => !c.isDuplicate);
+
+		console.log("Done");
+	}
+
+	private static findDupes(ogWhiteCards: IWhiteCard[], ogBlackCards: IBlackCard[]): [IWhiteCard[], IBlackCard[]]
+	{
 		/**
 		 * Remove all the duplicate cards, based on a graduated levenshtein distance.
 		 * Cards with < 7 characters will be checked for an exact, case insensitive match.
 		 * Cards with > 7 characters will be checked for a levenshtein distance of ~15% of the string length.
 		 *      e.g. String with length 7 will fail when matched with levenshtein distance of 1. String of length 14 will fail with LD of 2, etc.
-		 * @param {T[]} acc
-		 * @param {T} card
-		 * @param {(card: T) => string} getCardProperty
+		 * @param {T[]} acc The accumulator
+		 * @param {T} card The card to match against
+		 * @param {(card: T) => string} getCardProperty Returns the property to check in each card
 		 * @returns {T | undefined}
 		 */
 		const doMatch = <T extends ICard>(acc: T[], card: T, getCardProperty: (card: T) => string) => {
@@ -53,7 +88,7 @@ export class CardManager
 			});
 		};
 
-		this.blackCards = ogBlackCards.reduce((acc, card) =>
+		const dedupedBlack = ogBlackCards.reduce((acc, card) =>
 		{
 			const matchFound = doMatch(acc, card, (card) => card.prompt);
 
@@ -65,10 +100,7 @@ export class CardManager
 			return acc;
 		}, [] as IBlackCard[]);
 
-		console.log(`Removed ${ogBlackCards.length - this.blackCards.length} duplicate black cards`);
-
-
-		this.whiteCards = ogWhiteCards.reduce((acc, card) =>
+		const dedupedWhite = ogWhiteCards.reduce((acc, card) =>
 		{
 			const matchFound = doMatch(acc, card, (card) => card.response);
 
@@ -80,7 +112,7 @@ export class CardManager
 			return acc;
 		}, [] as IWhiteCard[]);
 
-		console.log(`Removed ${ogWhiteCards.length - this.whiteCards.length} duplicate white cards`);
+		return [dedupedWhite, dedupedBlack];
 	}
 
 	private static getAllowedCard(cards: ICard[], usedCards: number[])

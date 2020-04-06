@@ -11,16 +11,20 @@ import {Routes} from "./Routes";
 import {UserDataStore} from "../Global/DataStore/UserDataStore";
 import styled from "@material-ui/styles/styled";
 import Paper from "@material-ui/core/Paper";
-import {MdPeople} from "react-icons/all";
+import {MdPeople, MdShare} from "react-icons/all";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import {GameRoster} from "../Areas/Game/Components/GameRoster";
-import {Link} from "react-router-dom";
+import {Link, matchPath, RouteComponentProps} from "react-router-dom";
 import {ErrorDataStore} from "../Global/DataStore/ErrorDataStore";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import {CopyGameLink} from "../UI/CopyGameLink";
+import {GameDataStore} from "../Global/DataStore/GameDataStore";
+import {useHistory} from "react-router";
+import {SiteRoutes} from "../Global/Routes/Routes";
 
 interface IAppProps
 {
@@ -46,10 +50,14 @@ const useStyles = makeStyles({
 		minWidth: 0,
 		fontSize: "1.5rem",
 	},
+	firstButton: {
+		minWidth: 0,
+		marginLeft: "auto",
+		fontSize: "1.5rem"
+	},
 	rosterButton: {
 		minWidth: 0,
-		fontSize: "1.5rem",
-		marginLeft: "auto"
+		fontSize: "1.5rem"
 	},
 	logo: {
 		color: "#000",
@@ -72,7 +80,12 @@ const App: React.FC = () =>
 	const classes = useStyles();
 
 	const [rosterOpen, setRosterOpen] = useState(false);
+	const [shareOpen, setShareOpen] = useState(false);
 	const [errorPayload, setErrors] = useState(ErrorDataStore.state);
+
+	const history = useHistory();
+
+	const isGame = !!matchPath(history.location.pathname, SiteRoutes.Game.path);
 
 	useEffect(() =>
 	{
@@ -84,7 +97,7 @@ const App: React.FC = () =>
 		<div>
 			<OuterContainer>
 				<Paper elevation={10}>
-					<Container maxWidth={"sm"} style={{position: "relative", padding: 0, background: "#FFF", minHeight: "100vh"}}>
+					<Container maxWidth={"md"} style={{position: "relative", padding: 0, background: "#FFF", minHeight: "100vh"}}>
 						<CardMedia>
 							<AppBar color={"transparent"} position="static" elevation={0}>
 								<Toolbar>
@@ -93,9 +106,16 @@ const App: React.FC = () =>
 											<img className={classes.logoIcon} src={"/logo-small.png"} style={{paddingRight: "1rem"}}/> Let's Play WTF
 										</Link>
 									</Typography>
-									<Button className={classes.rosterButton} size={"large"} onClick={() => setRosterOpen(true)}>
-										<MdPeople/>
-									</Button>
+									{isGame && (
+										<>
+											<Button className={classes.firstButton} size={"large"} onClick={() => setShareOpen(true)}>
+												<MdShare/>
+											</Button>
+											<Button className={classes.rosterButton} size={"large"} onClick={() => setRosterOpen(true)}>
+												<MdPeople/>
+											</Button>
+										</>
+									)}
 								</Toolbar>
 							</AppBar>
 						</CardMedia>
@@ -105,6 +125,14 @@ const App: React.FC = () =>
 					</Container>
 				</Paper>
 			</OuterContainer>
+			<Dialog open={shareOpen} onClose={() => setShareOpen(false)}>
+				<DialogContent style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+					<Typography variant={"h4"}>Game: {GameDataStore.state.game?.id}</Typography>
+					<br/>
+					<br/>
+					<CopyGameLink buttonSize={"large"}/>
+				</DialogContent>
+			</Dialog>
 			<Dialog open={rosterOpen} onClose={() => setRosterOpen(false)}>
 				<DialogTitle id="form-dialog-title">Game Roster</DialogTitle>
 				<DialogContent>

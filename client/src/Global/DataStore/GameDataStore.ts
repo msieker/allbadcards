@@ -68,7 +68,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			this.loadPlayerCards(meGuid);
 		}
 
-		if(prev.game?.blackCard !== this.state.game?.blackCard)
+		if (prev.game?.blackCard !== this.state.game?.blackCard)
 		{
 			this.loadBlackCard();
 		}
@@ -77,14 +77,14 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 	private loadRoundCards()
 	{
 		const toLoad = this.state.game?.roundCards;
-		if(!toLoad)
+		if (!toLoad)
 		{
 			return;
 		}
 
 		const cardIds = ArrayFlatten<number>(Object.values(toLoad));
 
-		this.loadWhiteCardMap(cardIds)
+		return this.loadWhiteCardMap(cardIds)
 			.then(roundCardDefs => this.update({
 				roundCardDefs
 			}));
@@ -93,14 +93,14 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 	private loadPlayerCards(playerGuid: string)
 	{
 		const toLoad = this.state.game?.players[playerGuid].whiteCards;
-		if(!toLoad)
+		if (!toLoad)
 		{
 			return;
 		}
 
 		const cardIds = Object.values(toLoad);
 
-		this.loadWhiteCardMap(cardIds)
+		return this.loadWhiteCardMap(cardIds)
 			.then(playerCardDefs => this.update({
 				playerCardDefs
 			}));
@@ -108,7 +108,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 
 	private loadBlackCard()
 	{
-		Platform.getBlackCard(this.state.game?.blackCard!)
+		return Platform.getBlackCard(this.state.game?.blackCard!)
 			.then(blackCardDef => this.update({
 				blackCardDef
 			}));
@@ -130,7 +130,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 	{
 		console.log("[GameDataStore] Hydrating...", gameId);
 
-		Platform.getGame(gameId)
+		return Platform.getGame(gameId)
 			.then(data =>
 			{
 				this.update({
@@ -149,7 +149,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			throw new Error("Invalid card or game!");
 		}
 
-		Platform.playCards(this.state.game.id, userGuid, cardIds)
+		return Platform.playCards(this.state.game.id, userGuid, cardIds)
 			.catch(e => console.error(e));
 	}
 
@@ -160,7 +160,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			throw new Error("Invalid card or game!");
 		}
 
-		Platform.selectWinnerCard(this.state.game.id, chooserGuid, winningPlayerGuid)
+		return Platform.selectWinnerCard(this.state.game.id, chooserGuid, winningPlayerGuid)
 			.catch(e => console.error(e));
 	}
 
@@ -171,7 +171,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			throw new Error("Invalid card or game!");
 		}
 
-		Platform.revealNext(this.state.game.id, userGuid)
+		return Platform.revealNext(this.state.game.id, userGuid)
 			.catch(e => console.error(e));
 	}
 
@@ -182,8 +182,34 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			throw new Error("Invalid card or game!");
 		}
 
-		Platform.startRound(this.state.game.id, userGuid)
+		return Platform.startRound(this.state.game.id, userGuid)
 			.catch(e => console.error(e));
+	}
+
+	public forfeit(playerGuid: string, cardsNeeded: number)
+	{
+		const game = this.state.game;
+		if (!game)
+		{
+			throw new Error("Invalid card or game!");
+		}
+
+		const toPlay: number[] = [];
+		const myCards = game.players[playerGuid].whiteCards;
+		while(toPlay.length < cardsNeeded)
+		{
+			let cardIndex = Math.floor(Math.random() * myCards.length);
+			const card = myCards[cardIndex];
+			if(!toPlay.includes(card))
+			{
+				toPlay.push(card);
+			}
+		}
+
+		this.playWhiteCards(toPlay, playerGuid)
+			.then(() => {
+				Platform.forfeit(game.id, playerGuid, toPlay);
+			});
 	}
 }
 

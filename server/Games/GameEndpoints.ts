@@ -140,6 +140,21 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		}
 	});
 
+	app.post("/api/game/forfeit", async (req, res, next) =>
+	{
+		console.log(req.url, req.body);
+		try
+		{
+			const result = await GameManager.forfeit(req.body.gameId, req.body.playerGuid, req.body.playedCards);
+
+			res.send(result);
+		}
+		catch (error)
+		{
+			res.send(500, { message: error.message, stack: error.stack });
+		}
+	});
+
 	app.post("/api/game/reveal-next", async (req, res, next) =>
 	{
 		console.log(req.url, req.body);

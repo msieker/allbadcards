@@ -374,8 +374,27 @@ class _GameManager
 		const existingGame = await this.getGame(gameId);
 
 		const newGame = {...existingGame};
-		newGame.usedWhiteCards.push(...cardIds);
 		newGame.roundCards[playerGuid] = cardIds;
+
+		await this.updateGame(newGame);
+
+		return newGame;
+	}
+
+	public async forfeit(gameId: string, playerGuid: string, playedCards: number[])
+	{
+		const existingGame = await this.getGame(gameId);
+
+		const newGame = {...existingGame};
+
+		// Get the cards they haven't played
+		const unplayedCards = existingGame.players[playerGuid].whiteCards.filter(c => !playedCards.includes(c));
+
+		// Remove the unplayed cards from the used cards list. i.e. put them back in the pool
+		newGame.usedWhiteCards = newGame.usedWhiteCards.filter(a => !unplayedCards.includes(a));
+
+		// clear out the player's cards
+		newGame.players[playerGuid].whiteCards = [];
 
 		await this.updateGame(newGame);
 

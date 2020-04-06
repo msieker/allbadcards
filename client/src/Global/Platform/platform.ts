@@ -145,6 +145,15 @@ class _Platform
 		});
 	}
 
+	public async forfeit(gameId: string, playerGuid: string, playedCards: number[])
+	{
+		return _Platform.doPost<GameItem>("/api/game/forfeit", {
+			gameId,
+			playerGuid,
+			playedCards
+		});
+	}
+
 	public async selectWinnerCard(gameId: string, playerGuid: string, winningPlayerGuid: string)
 	{
 		return _Platform.doPost<GameItem>("/api/game/select-winner-card", {

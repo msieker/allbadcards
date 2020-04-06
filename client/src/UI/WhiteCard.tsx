@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 	card: {
 		display: "flex",
 		flexDirection: "column",
-		minHeight: "33vh"
+		minHeight: "33vh",
 	}
 });
 

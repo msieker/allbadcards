@@ -24,8 +24,6 @@ const useStyles = makeStyles({
 
 const GameJoin: React.FC<IGameJoinProps> = (props) =>
 {
-	const classes = useStyles();
-
 	const [userData, setUserData] = useState(UserDataStore.state);
 	const [gameData, setGameData] = useState(GameDataStore.state);
 	const [nicknameDialogOpen, setNicknameDialogOpen] = useState(false);

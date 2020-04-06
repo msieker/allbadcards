@@ -10,6 +10,8 @@ import {RevealWhites} from "./Components/RevealWhites";
 import {ShowWinner} from "./Components/ShowWinner";
 import Button from "@material-ui/core/Button";
 import {Confirmation} from "./Components/Confirmation";
+import {WhiteCardHand} from "./Components/WhiteCardHand";
+import Tooltip from "@material-ui/core/Tooltip";
 
 interface IGamePlayWhiteProps
 {
@@ -26,7 +28,9 @@ interface IGamePlayWhiteState
 {
 	gameData: IGameDataStorePayload;
 	userData: IUserData;
+	didForfeit: boolean;
 	pickedCards: number[];
+	canUseMyCardsSuck: boolean;
 }
 
 export class GamePlayWhite extends React.Component<Props, State>
@@ -38,7 +42,9 @@ export class GamePlayWhite extends React.Component<Props, State>
 		this.state = {
 			gameData: GameDataStore.state,
 			userData: UserDataStore.state,
-			pickedCards: []
+			pickedCards: [],
+			didForfeit: false,
+			canUseMyCardsSuck: this.determineCanUseMyCardsSuck(GameDataStore.state.game?.roundIndex ?? 0, GameDataStore.state.game?.id)
 		};
 	}
 
@@ -55,12 +61,35 @@ export class GamePlayWhite extends React.Component<Props, State>
 
 	public componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void
 	{
-		if(prevState.gameData.game?.roundIndex !== this.state.gameData.game?.roundIndex)
+		const prevRoundIndex = prevState.gameData.game?.roundIndex;
+		const currentRoundIndex = this.state.gameData.game?.roundIndex ?? 0;
+
+		if (prevRoundIndex !== currentRoundIndex)
 		{
 			this.setState({
-				pickedCards: []
+				pickedCards: [],
+				didForfeit: false
+			});
+
+			const canUseMyCardsSuck = this.determineCanUseMyCardsSuck(currentRoundIndex, this.state.gameData.game?.id);
+
+			this.setState({
+				canUseMyCardsSuck
 			});
 		}
+	}
+
+	private determineCanUseMyCardsSuck(currentRoundIndex: number, gameId: string | undefined)
+	{
+		if (!gameId)
+		{
+			return false;
+		}
+
+		const lastUsedCardsSuckIndex = parseInt(localStorage.getItem(this.getCardsSuckLsKey(gameId)) ?? "-99");
+		const diff = currentRoundIndex - lastUsedCardsSuckIndex;
+
+		return diff >= 5;
 	}
 
 	private onCommit = () =>
@@ -74,26 +103,65 @@ export class GamePlayWhite extends React.Component<Props, State>
 		GameDataStore.playWhiteCards(this.state.pickedCards, this.state.userData.playerGuid);
 	};
 
-	private onPick = (id: number) =>
+	private onPickUpdate = (pickedCards: number[]) =>
 	{
 		this.setState({
-			pickedCards: [...this.state.pickedCards, id]
+			pickedCards
 		});
 	};
 
-	private onUnpick = (id: number) =>
+	private getCardsSuckLsKey(gameId: string)
 	{
-		this.setState({
-			pickedCards: this.state.pickedCards.filter(a => a !== id)
-		});
+		return `cards-suck-last-round-index:${gameId}`;
+	}
+
+	private onForfeit = () =>
+	{
+		const didConfirm = confirm("" +
+			"You could still win this round, but we'll automatically play a random selection from your hand, then give you new cards. " +
+			"Do you really want to do that?");
+		if (didConfirm)
+		{
+			this.setState({
+				didForfeit: true
+			});
+
+			const gameId = this.state.gameData.game?.id;
+
+			if (gameId)
+			{
+				localStorage.setItem(this.getCardsSuckLsKey(gameId), String(this.state.gameData.game?.roundIndex ?? 0));
+			}
+
+			GameDataStore.forfeit(this.state.userData.playerGuid, this.getTargetPickNeeded());
+		}
 	};
+
+	private getTargetPickNeeded()
+	{
+		const special = this.state.gameData.blackCardDef?.special;
+		let targetPicked = 1;
+		switch (special)
+		{
+			case "DRAW 2, PICK 3":
+				targetPicked = 3;
+				break;
+
+			case "PICK 2":
+				targetPicked = 2;
+				break;
+		}
+
+		return targetPicked;
+	}
 
 	public render()
 	{
 		const {
 			userData,
 			gameData,
-			pickedCards
+			canUseMyCardsSuck,
+			didForfeit
 		} = this.state;
 
 		if (!gameData.game)
@@ -117,8 +185,6 @@ export class GamePlayWhite extends React.Component<Props, State>
 			return null;
 		}
 
-		const whiteCards = Object.values(gameData.playerCardDefs);
-
 		const remainingPlayerGuids = Object.keys(players ?? {})
 			.filter(pg => !(pg in (roundCards ?? {})) && pg !== chooserGuid);
 
@@ -130,10 +196,6 @@ export class GamePlayWhite extends React.Component<Props, State>
 			: `Picking: ${remainingPlayers.join(", ")}`;
 
 		const hasPlayed = userData.playerGuid in roundCards;
-
-		const renderedWhiteCards = hasPlayed
-			? roundCards[userData.playerGuid].map(cid => gameData.roundCardDefs[cid]).filter(a => !!a)
-			: whiteCards;
 
 		const hasWinner = !!gameData.game?.lastWinner;
 
@@ -184,57 +246,42 @@ export class GamePlayWhite extends React.Component<Props, State>
 				<Divider style={{margin: "1rem 0"}}/>
 				{!hasWinner && roundStarted && !revealTime && (
 					<Grid container spacing={2}>
-						{renderedWhiteCards.map(card =>
-						{
-							const pickedIndex = pickedCards.indexOf(card.id);
-							const picked = pickedIndex > -1;
-							const label = picked
-								? targetPicked > 1
-									? `Picked: ${pickedIndex + 1}`
-									: "Picked"
-								: "Pick";
+						<WhiteCardHand
+							gameData={gameData}
+							userData={userData}
+							targetPicked={targetPicked}
+							onPickUpdate={this.onPickUpdate}
+						/>
 
-							return (
-								<Grid item xs={12} sm={6}>
-									<WhiteCard
-										key={card.id}
-										actions={<>
-											{!hasPlayed && (
-												<>
-													<Button
-														variant={"contained"}
-														color={"primary"}
-														disabled={metPickTarget || pickedCards.includes(card.id)}
-														onClick={() => this.onPick(card.id)}
-													>
-														{label}
-													</Button>
-													<Button
-														variant={"contained"}
-														color={"primary"}
-														disabled={!pickedCards.includes(card.id)}
-														onClick={() => this.onUnpick(card.id)}
-													>
-														Unpick
-													</Button>
-												</>
-											)}
-										</>}
-									>
-										{card.response}
-									</WhiteCard>
-								</Grid>
-							);
-						})}
+						{!hasPlayed && !didForfeit && !revealTime && (
+							<Grid item xs={12} style={{display: "flex", justifyContent: "center", padding: "4rem 0 2rem"}}>
+								<Tooltip enterTouchDelay={0} enterDelay={0} title={canUseMyCardsSuck ? "Forfeit round and get new cards?" : "You can only do this every 5 rounds"} arrow>
+									<div>
+										<Button
+											size={"large"}
+											variant={"contained"}
+											color={"primary"}
+											disabled={hasPlayed || revealTime || !roundStarted || !canUseMyCardsSuck}
+											onClick={this.onForfeit}
+											style={{
+												marginLeft: "0.5rem"
+											}}
+										>
+											My cards suck
+										</Button>
+									</div>
+								</Tooltip>
+							</Grid>
+						)}
 					</Grid>
 				)}
-				{!hasPlayed && metPickTarget && !revealTime && (
+
+				{!hasPlayed && !didForfeit && !revealTime && metPickTarget && (
 					<Confirmation>
 						<Button
 							size={"large"}
 							variant={"contained"}
-							color={"secondary"}
-							disabled={!metPickTarget}
+							color={"primary"}
 							onClick={this.onCommit}
 						>
 							Play

@@ -1,5 +1,6 @@
 import * as React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {Container} from "@material-ui/core";
 
 const useStyles = makeStyles({
 	container: {
@@ -14,12 +15,11 @@ const useStyles = makeStyles({
 	inner: {
 		boxSizing:"border-box",
 		display: "flex",
-		maxWidth: 600,
 		width: "100%",
-		background: "black",
+		background: "white",
 		justifyContent: "center",
-		padding: "1rem",
-		boxShadow: "0 -5px 15px -10px rgba(0,0,0,0.5)"
+		padding: "1rem 0",
+		boxShadow: "0 -15px 10px -15px rgba(0,0,0,1)"
 	}
 });
 
@@ -29,9 +29,11 @@ export const Confirmation: React.FC = (props) =>
 
 	return (
 		<div className={classes.container}>
-			<div className={classes.inner}>
-				{props.children}
-			</div>
+			<Container maxWidth={"md"} style={{padding :0}}>
+				<div className={classes.inner}>
+					{props.children}
+				</div>
+			</Container>
 		</div>
 	);
 }
