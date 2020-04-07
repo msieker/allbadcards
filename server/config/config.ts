@@ -13,7 +13,7 @@ export class Config
 
 	public static get host()
 	{
-		let host = "https://letsplay.wtf";
+		let host = "https://allbad.cards";
 
 		switch (this.Environment)
 		{
@@ -21,7 +21,7 @@ export class Config
 				host = "http://jlauer.local:5000";
 				break;
 			case "prod":
-				host = "https://letsplay.wtf";
+				host = "https://allbad.cards";
 				break;
 		}
 

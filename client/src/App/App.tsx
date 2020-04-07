@@ -114,7 +114,7 @@ const App: React.FC = () =>
 
 	return (
 		<div>
-			<Helmet titleTemplate={"%s | Let's Play: WTF"} defaultTitle={"Let's Play: WTF | Play Cards Against Humanity online!"} />
+			<Helmet titleTemplate={"%s | All Bad Cards"} defaultTitle={"All Bad Cards | Play Cards Against Humanity online!"} />
 			<OuterContainer>
 				<Paper elevation={10}>
 					<Container maxWidth={"md"} style={{position: "relative", padding: 0, background: "#FFF", minHeight: "100vh"}}>
@@ -123,7 +123,7 @@ const App: React.FC = () =>
 								<Toolbar className={appBarClasses}>
 									<Typography variant="h6">
 										<Link to={"/"} className={classes.logo}>
-											<img className={classes.logoIcon} src={"/logo-small.png"} /> Let's Play WTF
+											<img className={classes.logoIcon} src={"/logo-small.png"} /> All Bad Cards
 										</Link>
 									</Typography>
 									{isGame && (
