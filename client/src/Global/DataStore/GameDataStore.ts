@@ -4,7 +4,7 @@ import {UserDataStore} from "./UserDataStore";
 import deepEqual from "deep-equal";
 import {ArrayFlatten} from "../Utils/ArrayUtils";
 
-export type WhiteCardMap = { [cardId: number]: IWhiteCard };
+export type WhiteCardMap = { [cardId: number]: IWhiteCard | undefined };
 
 export interface IGameDataStorePayload
 {
@@ -76,11 +76,7 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 
 	private loadRoundCards()
 	{
-		const toLoad = this.state.game?.roundCards;
-		if (!toLoad)
-		{
-			return;
-		}
+		const toLoad = this.state.game?.roundCards ?? [];
 
 		const cardIds = ArrayFlatten<number>(Object.values(toLoad));
 

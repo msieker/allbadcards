@@ -243,6 +243,7 @@ class _GameManager
 		}
 
 		const newGame = {...existingGame};
+		newGame.revealIndex = 0;
 		newGame.players[playerGuid] = this.createPlayer(playerGuid, nickname, isSpectating);
 
 		// If the game already started, deal in this new person

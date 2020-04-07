@@ -26,6 +26,8 @@ import {GameDataStore} from "../Global/DataStore/GameDataStore";
 import {useHistory} from "react-router";
 import {SiteRoutes} from "../Global/Routes/Routes";
 import ReactGA from "react-ga";
+import classNames from "classnames";
+import Helmet from "react-helmet";
 
 interface IAppProps
 {
@@ -45,7 +47,8 @@ interface IAppState
 const useStyles = makeStyles({
 	logoIcon: {
 		height: "2rem",
-		width: "auto"
+		width: "auto",
+		paddingRight: "1rem"
 	},
 	settingsButton: {
 		minWidth: 0,
@@ -65,6 +68,13 @@ const useStyles = makeStyles({
 		textDecoration: "none",
 		display: "flex",
 		alignItems: "center"
+	},
+	appBar: {
+		padding: "0 1rem"
+	},
+	centerBar: {
+		display: "flex",
+		justifyContent: "center"
 	}
 });
 
@@ -87,6 +97,11 @@ const App: React.FC = () =>
 	const history = useHistory();
 
 	const isGame = !!matchPath(history.location.pathname, SiteRoutes.Game.path);
+	const isHome = history.location.pathname === "/";
+
+	const appBarClasses = classNames(classes.appBar, {
+		[classes.centerBar]: isHome
+	});
 
 	useEffect(() =>
 	{
@@ -99,15 +114,16 @@ const App: React.FC = () =>
 
 	return (
 		<div>
+			<Helmet titleTemplate={"%s | Let's Play: WTF"} defaultTitle={"Let's Play: WTF | Play Cards Against Humanity online!"} />
 			<OuterContainer>
 				<Paper elevation={10}>
 					<Container maxWidth={"md"} style={{position: "relative", padding: 0, background: "#FFF", minHeight: "100vh"}}>
 						<CardMedia>
 							<AppBar color={"transparent"} position="static" elevation={0}>
-								<Toolbar>
+								<Toolbar className={appBarClasses}>
 									<Typography variant="h6">
 										<Link to={"/"} className={classes.logo}>
-											<img className={classes.logoIcon} src={"/logo-small.png"} style={{paddingRight: "1rem"}}/> Let's Play WTF
+											<img className={classes.logoIcon} src={"/logo-small.png"} /> Let's Play WTF
 										</Link>
 									</Typography>
 									{isGame && (

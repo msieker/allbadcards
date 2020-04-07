@@ -50,9 +50,7 @@ export const WhiteCardHand: React.FC<Props> =
 
 		const me = players[userData.playerGuid];
 
-		const cardDefsLoaded = Object.values(roundCards ?? {}).length === 0 || Object.keys(gameData.roundCardDefs).length > 0;
-
-		if (!me || !cardDefsLoaded)
+		if (!me)
 		{
 			return null;
 		}
@@ -62,14 +60,15 @@ export const WhiteCardHand: React.FC<Props> =
 		const hasPlayed = userData.playerGuid in roundCards;
 
 		const renderedWhiteCards = hasPlayed
-			? roundCards[userData.playerGuid].map(cid => gameData.roundCardDefs[cid]).filter(a => !!a)
+			? roundCards[userData.playerGuid].map(cid => gameData.roundCardDefs?.[cid]).filter(a => !!a)
 			: whiteCards;
 
 		const metPickTarget = targetPicked <= pickedCards.length;
 
 		const renderedHand = renderedWhiteCards.map(card =>
 		{
-			const pickedIndex = pickedCards.indexOf(card.id);
+			const cardId = card?.id ?? -99;
+			const pickedIndex = pickedCards.indexOf(card?.id ?? -99);
 			const picked = pickedIndex > -1;
 			const label = picked
 				? targetPicked > 1
@@ -79,31 +78,33 @@ export const WhiteCardHand: React.FC<Props> =
 
 			return (
 				<Grid item xs={12} sm={6} md={4}>
-					<WhiteCard
-						key={card.id}
-						actions={!hasPlayed && (
-							<>
-								<Button
-									variant={"contained"}
-									color={"primary"}
-									disabled={metPickTarget || pickedCards.includes(card.id)}
-									onClick={() => onPick(card.id)}
-								>
-									{label}
-								</Button>
-								<Button
-									variant={"contained"}
-									color={"primary"}
-									disabled={!pickedCards.includes(card.id)}
-									onClick={() => onUnpick(card.id)}
-								>
-									Unpick
-								</Button>
-							</>
-						)}
-					>
-						{card.response}
-					</WhiteCard>
+					{card && (
+						<WhiteCard
+							key={cardId}
+							actions={!hasPlayed && (
+								<>
+									<Button
+										variant={"contained"}
+										color={"primary"}
+										disabled={metPickTarget || pickedCards.includes(cardId)}
+										onClick={() => onPick(cardId)}
+									>
+										{label}
+									</Button>
+									<Button
+										variant={"contained"}
+										color={"primary"}
+										disabled={!pickedCards.includes(cardId)}
+										onClick={() => onUnpick(cardId)}
+									>
+										Unpick
+									</Button>
+								</>
+							)}
+						>
+							{card.response}
+						</WhiteCard>
+					)}
 				</Grid>
 			);
 		});

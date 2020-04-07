@@ -46,8 +46,11 @@ export class NicknameDialog extends React.Component<Props, State>
 
 	private onConfirm = () =>
 	{
-		this.props.onConfirm(this.state.nickname);
-		this.props.onClose();
+		if(this.state.nickname.trim().length > 0)
+		{
+			this.props.onConfirm(this.state.nickname);
+			this.props.onClose();
+		}
 	};
 
 	private onEnter = (e: React.KeyboardEvent) => {

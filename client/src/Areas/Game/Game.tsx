@@ -7,6 +7,7 @@ import {GameDataStore, IGameDataStorePayload} from "../../Global/DataStore/GameD
 import {GamePlayWhite} from "./GamePlayWhite";
 import {IUserData, UserDataStore} from "../../Global/DataStore/UserDataStore";
 import {GamePlayBlack} from "./GamePlayBlack";
+import Helmet from "react-helmet";
 
 interface IGameParams
 {
@@ -58,6 +59,7 @@ class Game extends React.Component<RouteComponentProps<IGameParams>, IGameState>
 		const {
 			started,
 			chooserGuid,
+			ownerGuid,
 			players
 		} = this.state.gameData.game ?? {};
 
@@ -65,21 +67,26 @@ class Game extends React.Component<RouteComponentProps<IGameParams>, IGameState>
 			playerGuid
 		} = this.state.userData;
 
+		const owner = players?.[ownerGuid ?? ""];
 		const isOwner = this.gameIsOwned(id);
 		const isChooser = playerGuid === chooserGuid;
 		const amInGame = playerGuid in (players ?? {});
+		const title = `${owner?.nickname}'s game`;
 
 		return (
 			<>
+				<Helmet>
+					<title>{title}</title>
+				</Helmet>
 				{(!started || !amInGame) && (
 					<BeforeGame gameId={id} isOwner={isOwner} />
 				)}
 
-				{started && !isChooser && (
+				{started && amInGame && !isChooser && (
 					<GamePlayWhite />
 				)}
 
-				{started && isChooser && (
+				{started && amInGame && isChooser && (
 					<GamePlayBlack />
 				)}
 			</>

@@ -83,13 +83,16 @@ class GameDashboard extends React.Component<Props, State>
 	{
 		return (
 			<Container style={{textAlign: "center"}}>
-				<img style={{width: "50%", margin: "auto"}} src={"/logo-large.png"}/>
+				<img style={{width: "50%", margin: "2rem auto", maxWidth: "20rem"}} src={"/logo-large.png"}/>
 
 				<ButtonGroup style={{width: "100%", justifyContent: "center", marginTop: "2rem"}}>
 					<Button
 						variant="contained"
 						color="primary"
 						size="large"
+						style={{
+							fontSize: "2rem"
+						}}
 						onClick={this.createGame}
 						startIcon={<GiCardDraw/>}
 					>

@@ -68,7 +68,7 @@ export class RevealWhites extends React.Component <Props, State>
 		const realRevealIndex = game?.revealIndex ?? 0;
 		const revealedIndex = (realRevealIndex + (game?.randomOffset ?? 0)) % roundPlayers.length;
 		const cardsIdsRevealed = game?.roundCards[roundPlayers[revealedIndex]] ?? [];
-		const cardsRevealed = cardsIdsRevealed.map(cid => whiteCards.find(c => c.id === cid)!);
+		const cardsRevealed = cardsIdsRevealed.map(cid => gameData.roundCardDefs[cid]);
 		const timeToPick = remainingPlayers.length === 0;
 		const revealMode = timeToPick && realRevealIndex < roundCardKeys.length;
 
@@ -82,7 +82,7 @@ export class RevealWhites extends React.Component <Props, State>
 				{realRevealIndex >= 0 && (
 					<>
 						<WhiteCard key={revealedIndex} style={{marginBottom: "0.5rem"}}>
-							{cardsRevealed.map(card => (
+							{cardsRevealed.map(card => card && (
 								<>
 									<div>{card.response}</div>
 									<Divider style={{margin: "1rem 0"}}/>

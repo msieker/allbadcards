@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import {Confirmation} from "./Components/Confirmation";
 import {WhiteCardHand} from "./Components/WhiteCardHand";
 import Tooltip from "@material-ui/core/Tooltip";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 interface IGamePlayWhiteProps
 {
@@ -176,18 +177,10 @@ export class GamePlayWhite extends React.Component<Props, State>
 			roundStarted
 		} = gameData.game;
 
-		const me = players?.[userData.playerGuid];
-
-		const cardDefsLoaded = Object.values(gameData.game?.roundCards ?? {}).length === 0 || Object.keys(gameData.roundCardDefs).length > 0;
-
-		if (!me || !cardDefsLoaded)
-		{
-			return null;
-		}
-
 		const remainingPlayerGuids = Object.keys(players ?? {})
 			.filter(pg => !(pg in (roundCards ?? {})) && pg !== chooserGuid);
 
+		const playersAreRemaining = remainingPlayerGuids.length > 0;
 		const remainingPlayers = remainingPlayerGuids.map(pg => players?.[pg]?.nickname);
 		const chooser = players?.[chooserGuid!]?.nickname;
 
@@ -212,7 +205,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 		}
 
 		const metPickTarget = targetPicked <= this.state.pickedCards.length;
-		const revealTime = gameData.game.revealIndex >= 0 && gameData.game.revealIndex <= Object.keys(roundCards).length;
+		const revealTime = !playersAreRemaining && gameData.game.revealIndex >= 0 && gameData.game.revealIndex <= Object.keys(roundCards).length;
 
 		return (
 			<div style={{paddingBottom: "4rem"}}>

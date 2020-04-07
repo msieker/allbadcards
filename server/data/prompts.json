@@ -95,11 +95,6 @@
         "special": ""
     },
     {
-        "id": 19,
-        "prompt": "Here lies First Last, Year-2015, devoted friend, lover of ______.",
-        "special": "PICK 2"
-    },
-    {
         "id": 20,
         "prompt": "Honey, Mommy and Daddy love you very much. But apparently Mommy loves ______ more than she loves Daddy.",
         "special": ""
@@ -1295,7 +1290,7 @@
     {
         "id": 254,
         "prompt": "My plan for world domination begins with ______.",
-        "special": "PICK 2"
+        "special": ""
     },
     {
         "id": 255,
@@ -2120,7 +2115,7 @@
     },
     {
         "id": 424,
-        "prompt": "I don't mean to brag, but they call me the Micheal Jordan of ______.",
+        "prompt": "I don't mean to brag, but they call me the Michael Jordan of ______.",
         "special": ""
     },
     {
@@ -4655,7 +4650,7 @@
     },
     {
         "id": 895,
-        "prompt": "Here's what you can expect for the new year.\nOut: __.\nIn: __.",
+        "prompt": "Here's what you can expect for the new year.\nOut: ______.\nIn: ______.",
         "special": "PICK 2",
         "isDuplicate": true
     },

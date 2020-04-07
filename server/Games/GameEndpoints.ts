@@ -1,7 +1,9 @@
 import {Express} from "express";
 import {GameManager} from "./GameManager";
 import {CardManager} from "./CardManager";
+import apicache from "apicache";
 
+const cache = apicache.middleware;
 
 export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 {
@@ -21,7 +23,7 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		}
 	});
 
-	app.get("/api/game/get-white-card", async (req, res, next) =>
+	app.get("/api/game/get-white-card", cache("1 minute"), async (req, res, next) =>
 	{
 		console.log(req.url, req.query);
 		try
@@ -36,7 +38,7 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		}
 	});
 
-	app.get("/api/game/get-black-card", async (req, res, next) =>
+	app.get("/api/game/get-black-card", cache("1 minute"), async (req, res, next) =>
 	{
 		console.log(req.url, req.query);
 		try
@@ -44,21 +46,6 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 			const card = CardManager.getBlackCard(parseInt(req.query.cardId));
 
 			res.send(card);
-		}
-		catch (error)
-		{
-			res.send(500, { message: error.message, stack: error.stack });
-		}
-	});
-
-	app.get("/api/game/get", async (req, res, next) =>
-	{
-		console.log(req.url, req.query);
-		try
-		{
-			const game = await GameManager.getGame(req.query.gameId);
-
-			res.send(game);
 		}
 		catch (error)
 		{

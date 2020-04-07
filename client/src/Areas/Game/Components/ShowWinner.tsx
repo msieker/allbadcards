@@ -7,6 +7,12 @@ import Button from "@material-ui/core/Button";
 import {Platform} from "../../../Global/Platform/platform";
 import {WhiteCard} from "../../../UI/WhiteCard";
 import Grid from "@material-ui/core/Grid";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
 
 interface IShowWinnerProps
 {
@@ -80,7 +86,7 @@ export class ShowWinner extends React.Component<Props, State>
 			<>
 				<Grid item xs={12} sm={6}>
 					<WhiteCard style={{marginBottom: "0.5rem"}}>
-						{winnerCards.map(card => (
+						{winnerCards.map(card => card && (
 							<>
 								<div>{card.response}</div>
 								<Divider/>
@@ -100,13 +106,29 @@ export class ShowWinner extends React.Component<Props, State>
 					<Typography variant={"h4"}>
 						Winner: {winner?.nickname}!
 					</Typography>
-					<div>
-						<Typography>Scoreboard:</Typography>
-						{sortedPlayerGuids.map(pg => (
-							<Typography>
-								{game?.players[pg].nickname}: <strong>{game?.players[pg].wins}</strong>
-							</Typography>
-						))}
+					<div style={{marginTop: "1rem"}}>
+						<Typography>Scoreboard</Typography>
+						<List>
+							{sortedPlayerGuids.map((pg, i) => (
+								<>
+									{i > 0 && i <= sortedPlayerGuids.length - 1 && (
+										<Divider/>
+									)}
+									<ListItem>
+										<ListItemAvatar>
+											<Avatar>
+												<strong>{game?.players[pg].wins}</strong>
+											</Avatar>
+										</ListItemAvatar>
+										<ListItemText>
+											<Typography>
+												{game?.players[pg].nickname}
+											</Typography>
+										</ListItemText>
+									</ListItem>
+								</>
+							))}
+						</List>
 					</div>
 				</Grid>
 			</>

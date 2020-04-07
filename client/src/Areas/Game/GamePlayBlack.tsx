@@ -91,6 +91,8 @@ export class GamePlayBlack extends React.Component<Props, State>
 		const remainingPlayerGuids = Object.keys(players ?? {})
 			.filter(pg => !(pg in (roundCards ?? {})) && pg !== chooserGuid);
 
+		const playersAreRemaining = remainingPlayerGuids.length > 0;
+
 		const remainingPlayers = remainingPlayerGuids.map(pg => players?.[pg]?.nickname);
 
 		const revealedIndex = this.state.gameData.game?.revealIndex ?? 0;
@@ -98,7 +100,7 @@ export class GamePlayBlack extends React.Component<Props, State>
 		const revealMode = timeToPick && revealedIndex < roundCardKeys.length;
 		const revealFinished = revealedIndex === roundCardKeys.length;
 
-		const waitingLabel = revealFinished
+		const waitingLabel = revealFinished && !playersAreRemaining
 			? "Pick the winner"
 			: timeToPick
 				? `Reveal each white card...`
@@ -140,30 +142,32 @@ export class GamePlayBlack extends React.Component<Props, State>
 						</Button>
 					</div>
 				)}
-				<Divider style={{margin: "1rem 0"}}/>
 				{timeToPick && !revealMode && !hasWinner && (
-					<Grid container spacing={2}>
-						{roundCardKeys.map((playerGuid, i) => (
-							<Grid item xs={12} sm={6}>
-								<WhiteCard actions={(
-									<Button
-										variant={"contained"}
-										color={"primary"}
-										onClick={() => this.onSelect(playerGuid)}
-									>
-										Pick Winner
-									</Button>
-								)}>
-									{roundCardValues[i].map(card => (
-										<>
-											<div>{card.response}</div>
-											<Divider style={{margin: "1rem 0"}}/>
-										</>
-									))}
-								</WhiteCard>
-							</Grid>
-						))}
-					</Grid>
+					<>
+						<Grid container spacing={2}>
+							{roundCardKeys.map((playerGuid, i) => (
+								<Grid item xs={12} sm={6}>
+									<WhiteCard actions={(
+										<Button
+											variant={"contained"}
+											color={"primary"}
+											onClick={() => this.onSelect(playerGuid)}
+										>
+											Pick Winner
+										</Button>
+									)}>
+										{roundCardValues[i].map(card => card && (
+											<>
+												<div>{card.response}</div>
+												<Divider style={{margin: "1rem 0"}}/>
+											</>
+										))}
+									</WhiteCard>
+								</Grid>
+							))}
+						</Grid>
+						<Divider style={{margin: "1rem 0"}}/>
+					</>
 				)}
 			</>
 		);

@@ -6,6 +6,7 @@ import {CopyToClipboard} from "react-copy-to-clipboard";
 import {GameDataStore} from "../../Global/DataStore/GameDataStore";
 import {GameRoster} from "./Components/GameRoster";
 import {CopyGameLink} from "../../UI/CopyGameLink";
+import Divider from "@material-ui/core/Divider";
 
 interface IGamePreviewProps
 {
@@ -32,11 +33,11 @@ const GamePreview: React.FC<IGamePreviewProps> = (props) =>
 
 	return (
 		<div>
-			<Typography>Game ID: </Typography>
-			<Typography variant={"h4"} className={classes.gameId}>{props.id}</Typography>
-
+			<Typography variant={"h3"}>Game</Typography>
+			<Typography variant={"h5"} className={classes.gameId}>{props.id}</Typography>
 			<CopyGameLink />
-			<Typography className={classes.playersLabel}>Players</Typography>
+			<Divider style={{margin: "2rem 0"}} />
+			<Typography className={classes.playersLabel} variant={"h3"}>Players</Typography>
 			<GameRoster />
 			{props.children}
 		</div>
