@@ -92,7 +92,6 @@ const App: React.FC = () =>
 
 	const [rosterOpen, setRosterOpen] = useState(false);
 	const [shareOpen, setShareOpen] = useState(false);
-	const [errorPayload, setErrors] = useState(ErrorDataStore.state);
 
 	const history = useHistory();
 
@@ -106,15 +105,15 @@ const App: React.FC = () =>
 	useEffect(() =>
 	{
 		UserDataStore.initialize();
-		ErrorDataStore.listen(setErrors);
-		history.listen(() => {
+		history.listen(() =>
+		{
 			ReactGA.pageview(window.location.pathname + window.location.search);
 		});
 	}, []);
 
 	return (
 		<div>
-			<Helmet titleTemplate={"%s | All Bad Cards"} defaultTitle={"All Bad Cards | Play Cards Against Humanity online!"} />
+			<Helmet titleTemplate={"%s | All Bad Cards"} defaultTitle={"All Bad Cards | Play Cards Against Humanity online!"}/>
 			<OuterContainer>
 				<Paper elevation={10}>
 					<Container maxWidth={"md"} style={{position: "relative", padding: 0, background: "#FFF", minHeight: "100vh"}}>
@@ -123,7 +122,7 @@ const App: React.FC = () =>
 								<Toolbar className={appBarClasses}>
 									<Typography variant="h6">
 										<Link to={"/"} className={classes.logo}>
-											<img className={classes.logoIcon} src={"/logo-small.png"} /> All Bad Cards
+											<img className={classes.logoIcon} src={"/logo-small.png"}/> All Bad Cards
 										</Link>
 									</Typography>
 									{isGame && (
@@ -140,6 +139,11 @@ const App: React.FC = () =>
 							</AppBar>
 						</CardMedia>
 						<CardContent>
+							<Paper style={{padding: "1rem", marginBottom: "1rem"}}>
+								<Typography>
+									FYI everyone - the server is having trouble keeping up with demand. I've increased server capacity and I'm working to improve performance!
+								</Typography>
+							</Paper>
 							<Routes/>
 						</CardContent>
 					</Container>
@@ -157,22 +161,6 @@ const App: React.FC = () =>
 				<DialogTitle id="form-dialog-title">Game Roster</DialogTitle>
 				<DialogContent>
 					<GameRoster/>
-				</DialogContent>
-			</Dialog>
-			<Dialog open={errorPayload.errors.length > 0} onClose={ErrorDataStore.clear}>
-				<DialogTitle id="form-dialog-title">Errors</DialogTitle>
-				<DialogContent>
-					<List>
-						{errorPayload.errors.map(error => (
-							<ListItem>
-								<ListItemText>
-									<pre>
-										{error.stack}
-									</pre>
-								</ListItemText>
-							</ListItem>
-						))}
-					</List>
 				</DialogContent>
 			</Dialog>
 		</div>

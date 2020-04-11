@@ -11,6 +11,7 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import {SponsorList} from "./SponsorList";
+import CardContent from "@material-ui/core/CardContent";
 
 interface IGameDashboardProps extends RouteComponentProps
 {
@@ -84,7 +85,6 @@ class GameDashboard extends React.Component<Props, State>
 		return (
 			<Container style={{textAlign: "center"}}>
 				<img style={{width: "50%", margin: "2rem auto", maxWidth: "20rem"}} src={"/logo-large.png"}/>
-
 				<ButtonGroup style={{width: "100%", justifyContent: "center", marginTop: "2rem"}}>
 					<Button
 						variant="contained"

@@ -30,7 +30,7 @@ class _Database
 		MongoClient.connect(this.url, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
-		}, (err, client) =>
+		}, async (err, client) =>
 		{
 			if (err)
 			{
@@ -39,6 +39,11 @@ class _Database
 			}
 
 			this._client = client;
+			const db = client.db("letsplaywtf");
+
+			await client.db("letsplaywtf").createIndex("games", {
+				id: 1
+			});
 		});
 	}
 

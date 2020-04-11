@@ -42,6 +42,10 @@ class _GameDataStore extends DataStore<IGameDataStorePayload>
 			const data = JSON.parse(e.data);
 			this.update(data);
 		};
+
+		this.ws.onclose = () => {
+			alert("You've lost your connection to the server - please try refreshing! If this continues happening, the server is probably under load. Sorry about that!");
+		}
 	}
 
 	protected update(data: Partial<IGameDataStorePayload>)

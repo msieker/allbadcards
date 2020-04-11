@@ -4107,7 +4107,7 @@
     {
         "id": 790,
         "prompt": "Because you enjoyed ______, we thought you'd like ______.",
-        "special": "Pick 2"
+        "special": "PICK 2"
     },
     {
         "id": 791,
@@ -4739,7 +4739,7 @@
     },
     {
         "id": 912,
-        "prompt": "Donald Trump's first act as presidnet was to outlaw ______.",
+        "prompt": "Donald Trump's first act as president was to outlaw ______.",
         "special": ""
     },
     {

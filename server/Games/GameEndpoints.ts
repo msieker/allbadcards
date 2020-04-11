@@ -23,7 +23,7 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		}
 	});
 
-	app.get("/api/game/get-white-card", cache("1 minute"), async (req, res, next) =>
+	app.get("/api/game/get-white-card", cache("10 minutes"), async (req, res, next) =>
 	{
 		console.log(req.url, req.query);
 		try
@@ -38,7 +38,7 @@ export const RegisterGameEndpoints = (app: Express, clientFolder: string) =>
 		}
 	});
 
-	app.get("/api/game/get-black-card", cache("1 minute"), async (req, res, next) =>
+	app.get("/api/game/get-black-card", cache("10 minutes"), async (req, res, next) =>
 	{
 		console.log(req.url, req.query);
 		try

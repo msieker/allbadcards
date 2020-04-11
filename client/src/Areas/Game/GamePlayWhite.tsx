@@ -142,7 +142,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 	{
 		const special = this.state.gameData.blackCardDef?.special;
 		let targetPicked = 1;
-		switch (special)
+		switch (special?.toUpperCase())
 		{
 			case "DRAW 2, PICK 3":
 				targetPicked = 3;
@@ -192,17 +192,7 @@ export class GamePlayWhite extends React.Component<Props, State>
 
 		const hasWinner = !!gameData.game?.lastWinner;
 
-		let targetPicked = 1;
-		switch (gameData.blackCardDef?.special)
-		{
-			case "DRAW 2, PICK 3":
-				targetPicked = 3;
-				break;
-
-			case "PICK 2":
-				targetPicked = 2;
-				break;
-		}
+		let targetPicked = this.getTargetPickNeeded();
 
 		const metPickTarget = targetPicked <= this.state.pickedCards.length;
 		const revealTime = !playersAreRemaining && gameData.game.revealIndex >= 0 && gameData.game.revealIndex <= Object.keys(roundCards).length;

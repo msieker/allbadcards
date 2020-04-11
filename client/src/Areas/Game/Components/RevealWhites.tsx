@@ -77,6 +77,9 @@ export class RevealWhites extends React.Component <Props, State>
 			return null;
 		}
 
+		const lastCard = cardsRevealed.length === roundCardKeys.length;
+		const label = lastCard ? "Pick a winner" : "Next";
+
 		return (
 			<Grid item xs={12} sm={6}>
 				{realRevealIndex >= 0 && (
@@ -90,7 +93,7 @@ export class RevealWhites extends React.Component <Props, State>
 							))}
 							{this.props.canReveal && (
 								<Button color={"primary"} variant={"contained"} onClick={this.onReveal}>
-									Next
+									{label}
 								</Button>
 							)}
 						</WhiteCard>

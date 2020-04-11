@@ -392,7 +392,7 @@ class _GameManager
 		const unplayedCards = existingGame.players[playerGuid].whiteCards.filter(c => !playedCards.includes(c));
 
 		// Remove the unplayed cards from the used cards list. i.e. put them back in the pool
-		newGame.usedWhiteCards = newGame.usedWhiteCards.filter(a => !unplayedCards.includes(a));
+		newGame.usedWhiteCards.push(...unplayedCards);
 
 		// clear out the player's cards
 		newGame.players[playerGuid].whiteCards = [];
